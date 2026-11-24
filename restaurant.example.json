@@ -1,0 +1,614 @@
+{
+  "version": 1,
+  "menuLink": "",
+  "name": "Maple & Oak",
+  "tagline": "American grill",
+  "hours": "Open 11 to 10, Fri & Sat till 11",
+  "tables": 22,
+  "seats": 84,
+  "taxRate": 8.25,
+  "tipOptions": [
+    0,
+    18,
+    20,
+    22
+  ],
+  "defaultTip": 18,
+  "currency": "$",
+  "accent": "#b3261e",
+  "timerWarn": 12,
+  "timerLate": 20,
+  "notice": "Ask your server about allergens. 21+ for beer and wine; your server checks ID.",
+  "sections": [
+    {
+      "name": "Starters",
+      "blurb": "To share, or not.",
+      "items": [
+        {
+          "id": "wings",
+          "name": "Buffalo Wings",
+          "price": 13.5,
+          "desc": "Ten crispy wings, house buffalo or honey-BBQ, blue cheese, celery.",
+          "tags": [
+            "hot",
+            "dairy"
+          ],
+          "suggest": "fries",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "skins",
+          "name": "Loaded Potato Skins",
+          "price": 11,
+          "desc": "Cheddar, bacon, scallions, sour cream.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "pickles",
+          "name": "Fried Pickles",
+          "price": 9,
+          "desc": "Cornmeal-battered dill spears, ranch.",
+          "tags": [
+            "veg"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "dip",
+          "name": "Spinach Artichoke Dip",
+          "price": 12,
+          "desc": "Baked with parmesan, tortilla chips.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "shrimp",
+          "name": "Shrimp Cocktail",
+          "price": 15,
+          "desc": "Six chilled jumbo shrimp, horseradish cocktail sauce.",
+          "tags": [
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "crab",
+          "name": "Crab Cakes",
+          "price": 17.5,
+          "desc": "Two lump crab cakes, Old Bay remoulade.",
+          "tags": [],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Burgers & Sandwiches",
+      "blurb": "Half-pound patties on toasted brioche, with fries.",
+      "items": [
+        {
+          "id": "smash",
+          "name": "Classic Smash Burger",
+          "price": 15,
+          "desc": "Two smashed patties, American cheese, pickles, house sauce.",
+          "tags": [
+            "popular",
+            "dairy"
+          ],
+          "suggest": "rings",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "bacon",
+          "name": "Bacon Cheddar Burger",
+          "price": 17,
+          "desc": "Thick-cut bacon, sharp cheddar, lettuce, tomato.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "rings",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "mush",
+          "name": "Mushroom Swiss Burger",
+          "price": 16.5,
+          "desc": "Saut\u00e9ed mushrooms, Swiss, garlic aioli.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "veggie",
+          "name": "Veggie Burger",
+          "price": 14.5,
+          "desc": "Black bean and quinoa patty, pepper jack, avocado.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "nash",
+          "name": "Nashville Hot Chicken",
+          "price": 15.5,
+          "desc": "Fried thigh, cayenne glaze, slaw, pickles.",
+          "tags": [
+            "hot"
+          ],
+          "suggest": "shake",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "dip_s",
+          "name": "French Dip",
+          "price": 16,
+          "desc": "Shaved roast beef, Swiss, hoagie roll, au jus.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "pork",
+          "name": "Pulled Pork Sandwich",
+          "price": 14.5,
+          "desc": "12-hour smoked shoulder, Carolina sauce, slaw.",
+          "tags": [],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "blt",
+          "name": "Turkey BLT",
+          "price": 12,
+          "desc": "Roast turkey, bacon, lettuce, tomato, toasted sourdough.",
+          "tags": [],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "From the Grill",
+      "blurb": "Steaks with a baked potato and seasonal vegetables.",
+      "items": [
+        {
+          "id": "ribeye",
+          "name": "12 oz Ribeye",
+          "price": 34,
+          "desc": "USDA Choice, char-grilled, herb butter.",
+          "tags": [
+            "gf",
+            "chef",
+            "dairy"
+          ],
+          "suggest": "wine",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "strip",
+          "name": "NY Strip",
+          "price": 29,
+          "desc": "10 oz, peppercorn crust.",
+          "tags": [
+            "gf"
+          ],
+          "suggest": "wine",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "ribs",
+          "name": "Baby Back Ribs, full rack",
+          "price": 27,
+          "desc": "Slow-smoked, hickory BBQ glaze, fries and slaw.",
+          "tags": [],
+          "suggest": "beer",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "halfrib",
+          "name": "Baby Back Ribs, half rack",
+          "price": 19,
+          "desc": "Same ribs, lighter appetite.",
+          "tags": [],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "salmon",
+          "name": "Grilled Salmon",
+          "price": 24,
+          "desc": "Lemon-dill butter, rice pilaf, green beans.",
+          "tags": [
+            "gf",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Comfort Plates",
+      "blurb": "Like Sunday at home.",
+      "items": [
+        {
+          "id": "cfs",
+          "name": "Chicken Fried Steak",
+          "price": 18,
+          "desc": "Peppered cream gravy, mashed potatoes, green beans.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "meatloaf",
+          "name": "Mom's Meatloaf",
+          "price": 16.5,
+          "desc": "Tomato glaze, mashed potatoes, gravy.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "potpie",
+          "name": "Chicken Pot Pie",
+          "price": 16,
+          "desc": "Flaky crust, roast chicken, peas and carrots.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "mac",
+          "name": "Baked Mac & Cheese",
+          "price": 14.5,
+          "desc": "Three cheeses, toasted breadcrumb top.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "fish",
+          "name": "Fish & Chips",
+          "price": 17,
+          "desc": "Beer-battered cod, fries, tartar sauce.",
+          "tags": [],
+          "suggest": "beer",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Salads",
+      "blurb": "Add grilled chicken $5, salmon $8.",
+      "items": [
+        {
+          "id": "cobb",
+          "name": "Cobb Salad",
+          "price": 15.5,
+          "desc": "Chicken, bacon, egg, avocado, blue cheese, tomato.",
+          "tags": [
+            "gf",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "caesar",
+          "name": "Chicken Caesar Salad",
+          "price": 13.5,
+          "desc": "Romaine, parmesan, garlic croutons.",
+          "tags": [
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "harvest",
+          "name": "Harvest Salad",
+          "price": 14,
+          "desc": "Mixed greens, roasted squash, pecans, cranberries, goat cheese.",
+          "tags": [
+            "veg",
+            "gf",
+            "nuts",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Sides",
+      "blurb": "",
+      "items": [
+        {
+          "id": "fries",
+          "name": "Fries",
+          "price": 5,
+          "desc": "",
+          "tags": [
+            "veg"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "swfries",
+          "name": "Sweet Potato Fries",
+          "price": 6,
+          "desc": "",
+          "tags": [
+            "veg"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "rings",
+          "name": "Onion Rings",
+          "price": 6.5,
+          "desc": "",
+          "tags": [
+            "veg"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "macside",
+          "name": "Mac & Cheese",
+          "price": 6,
+          "desc": "",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "slaw",
+          "name": "Coleslaw",
+          "price": 4,
+          "desc": "",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "sidesal",
+          "name": "Side Salad",
+          "price": 5,
+          "desc": "",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Desserts",
+      "blurb": "",
+      "items": [
+        {
+          "id": "pie",
+          "name": "Apple Pie \u00e0 la Mode",
+          "price": 8,
+          "desc": "Warm, with vanilla bean ice cream.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "brownie",
+          "name": "Brownie Sundae",
+          "price": 8.5,
+          "desc": "Hot fudge, whipped cream, a cherry.",
+          "tags": [
+            "veg",
+            "dairy",
+            "nuts"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "cheese",
+          "name": "New York Cheesecake",
+          "price": 9,
+          "desc": "Graham crust, strawberry compote.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "keylime",
+          "name": "Key Lime Pie",
+          "price": 8,
+          "desc": "Tart and cold.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "blurb": "Soft drinks, tea and coffee come with free refills.",
+      "items": [
+        {
+          "id": "soda",
+          "name": "Soft Drink",
+          "price": 3.25,
+          "desc": "Coke, Diet Coke, Sprite, root beer.",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "tea",
+          "name": "Iced Tea",
+          "price": 3,
+          "desc": "Sweet or unsweet.",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "lemon",
+          "name": "Lemonade",
+          "price": 3.5,
+          "desc": "",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "coffee",
+          "name": "Coffee",
+          "price": 3,
+          "desc": "Bottomless drip.",
+          "tags": [
+            "veg",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "shake",
+          "name": "Milkshake",
+          "price": 7,
+          "desc": "Vanilla, chocolate or strawberry.",
+          "tags": [
+            "veg",
+            "dairy"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "beer",
+          "name": "Draft Beer",
+          "price": 6.5,
+          "desc": "Ask about today's taps.",
+          "tags": [
+            "21+"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        },
+        {
+          "id": "wine",
+          "name": "House Wine",
+          "price": 9,
+          "desc": "Red or white, by the glass.",
+          "tags": [
+            "21+",
+            "gf"
+          ],
+          "suggest": "",
+          "soldOut": false,
+          "hidden": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,814 @@
+<meta name="dash-one-writer">
+<!-- Replace YOUR-MENU-ID below with your published menu's link before you upload this page. -->
+<style>
+  .mo { font-family: var(--font-anthropic-sans); color: var(--color-fg); font-variant-numeric: tabular-nums; }
+  .mo * { box-sizing: border-box; }
+  .mo-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--cds-gap-sm) var(--cds-gap-lg); margin-bottom: var(--cds-gap-sm); }
+  .mo-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; }
+  .mo-head .mo-sub { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .mo-take { font-size: var(--cds-font-size-body); max-width: 70ch; margin: 0 0 var(--cds-gap-md); line-height: 1.5; }
+  .mo-take b, .mo b { font-weight: 600; }
+  .mo-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .mo-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); margin-bottom: var(--cds-gap-md); border-bottom: 1px solid var(--color-border-line); padding-bottom: var(--cds-gap-xs); }
+  .mo-tab { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); background: none; border: 0; border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); cursor: pointer; }
+  .mo-tab:hover { color: var(--color-fg); background: var(--color-panel); }
+  .mo-tab[aria-selected="true"] { color: var(--color-fg); background: var(--color-panel); box-shadow: inset 0 -2px 0 var(--color-fg); }
+  .mo-tab:focus-visible, .mo-sort:focus-visible, .mo select:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+  .mo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
+  .mo-grid.mo-wide > .mo-card { grid-column: 1 / -1; }
+  .mo-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+  .mo-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs); }
+  .mo-card h2 + p, .mo-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0 0 var(--cds-gap-md); max-width: 75ch; line-height: 1.45; }
+  .mo-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: var(--cds-gap-sm); margin-bottom: var(--cds-gap-md); }
+  .mo-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); min-width: 0; display: grid; gap: 2px; }
+  .mo-tile .mo-l { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .mo-tile .mo-v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: calc(var(--cds-font-size-title) * 1.25); line-height: 1.1; }
+  .mo-tile .mo-d { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .mo-tile .mo-d b { font-weight: 600; }
+  .is-good { color: var(--color-ok); } .is-bad { color: var(--color-bad); } .is-flat { color: var(--color-fg-muted); }
+  .mo-chart { position: relative; min-height: 220px; }
+  .mo-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .mo-chart text { font-family: var(--font-anthropic-sans); }
+  .mo-tip { position: absolute; z-index: 2; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg); white-space: nowrap; }
+  .mo-tip .mo-tk { color: var(--cds-text-secondary); display: block; margin-bottom: 2px; }
+  .mo-tip .mo-sw, .mo-legend .mo-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .mo-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0 0 var(--cds-gap-sm); padding: 0; list-style: none; }
+  .mo-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); align-items: center; margin-bottom: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .mo select { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 2px 6px; }
+  .mo-tbl-box { overflow: auto; max-height: 30rem; border-top: 1px solid var(--color-border-line); }
+  .mo table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); }
+  .mo th { position: sticky; top: 0; background: var(--color-panel); text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm) var(--cds-pad-xs) 0; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .mo td { padding: var(--cds-pad-xs) var(--cds-pad-sm) var(--cds-pad-xs) 0; border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+  .mo th.mo-num, .mo td.mo-num { text-align: right; }
+  .mo-sort { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  .mo-sort::after { content: ""; display: inline-block; width: 0.6em; }
+  th[aria-sort="ascending"] .mo-sort::after { content: " ↑"; } th[aria-sort="descending"] .mo-sort::after { content: " ↓"; }
+  .mo-pill { display: inline-block; font-size: var(--cds-font-size-caption); padding: 0 6px; border-radius: 999px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+  .mo-pill.c-star { border-color: transparent; color: var(--color-bg); } .mo-pill.c-plow, .mo-pill.c-puzzle, .mo-pill.c-dog { border-color: transparent; color: var(--color-bg); }
+  .mo-heat { display: grid; gap: 2px; font-size: var(--cds-font-size-caption); }
+  .mo-heat .mo-hc { min-height: 1.9rem; display: flex; align-items: center; justify-content: center; border-radius: 3px; color: var(--color-fg); }
+  .mo-heat .mo-hl { display: flex; align-items: center; color: var(--color-fg-muted); padding-right: 4px; }
+  .mo-heat .mo-hh { display: flex; align-items: end; justify-content: center; color: var(--color-fg-muted); padding-bottom: 2px; }
+  .mo-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--cds-gap-sm); }
+  .mo-list li { border-left: 3px solid var(--color-border-line); padding-left: var(--cds-pad-sm); font-size: var(--cds-font-size-body); line-height: 1.45; }
+  .mo-list .mo-meta { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); display: block; }
+  .mo-flags { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--cds-gap-sm); }
+  .mo-flag { border-left: 3px solid var(--color-warn); padding: 2px 0 2px var(--cds-pad-sm); font-size: var(--cds-font-size-body); line-height: 1.45; }
+  .mo-flag .mo-ft { font-weight: 600; display: block; }
+  .mo-tbl-box table [data-dash-source-state=empty] { color: transparent; }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  @media (prefers-reduced-motion: no-preference) { .mo-chart .mo-anim { animation: mo-in var(--cds-dur-slow) var(--cds-ease-out); } }
+  @keyframes mo-in { from { opacity: 0 } to { opacity: 1 } }
+</style>
+
+<div class="mo">
+  <header class="mo-head">
+    <h1>Maple &amp; Oak Diner Analytics</h1>
+    <span class="mo-sub">84 seats · 22 tables · 52 weeks of orders · <a class="mo-link" href="https://claude.ai/artifact/YOUR-MENU-ID" target="_blank" rel="noopener">guest menu</a> · <a class="mo-link" href="https://claude.ai/artifact/YOUR-MENU-ID#owner" target="_blank" rel="noopener">owner console</a></span>
+  </header>
+  <p class="mo-take">Since the 6 July changes (<b data-draw="kpi" data-source="kpis" data-field="weeks_after" data-where="metric=revenue" data-fmt="int">—</b> weeks against the <b data-draw="kpi" data-source="kpis" data-field="weeks_before" data-where="metric=revenue" data-fmt="int">—</b> before), weekly revenue is up <b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=revenue" data-fmt="signedpct">—</b>, food waste per week is down <b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=waste_cost" data-fmt="abspct">—</b> and the Friday–Saturday dinner ticket time at the 90th percentile fell <b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=peak_ticket" data-fmt="abspct">—</b>. Friday and Saturday lunch is now the slowest service, and reviews cooled on portion size after the trims. Compared with the same weeks run without the changes, they added <b data-draw="kpi" data-source="effects" data-field="effect_pct" data-where="metric=profit" data-fmt="signedpct">—</b> to weekly profit.</p>
+
+  <nav class="mo-tabs" aria-label="Sections">
+    <button class="mo-tab" type="button" aria-selected="true" aria-controls="overview">Overview</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="menu">Menu profit</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="demand">Demand</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="rota">Rota</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="suppliers">Suppliers</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="reviews">Reviews</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="waste">Waste</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="plan">Next round</button>
+    <button class="mo-tab" type="button" aria-selected="false" aria-controls="live">QR orders</button>
+  </nav>
+
+  <!-- ============================================================ OVERVIEW -->
+  <section id="overview" class="mo-page">
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Revenue per week</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=revenue" data-fmt="money">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=revenue" data-fmt="signedpct" data-good="up">—</b> vs before the changes</span></div>
+      <div class="mo-tile"><span class="mo-l">Covers per week</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=covers" data-fmt="int">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=covers" data-fmt="signedpct" data-good="up">—</b> vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Average check per guest</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=avg_check" data-fmt="money2">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=avg_check" data-fmt="signedpct" data-good="up">—</b> vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Food cost</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=food_cost_pct" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=food_cost_pct" data-fmt="signedpct" data-good="down">—</b> of revenue, vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Labour cost</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=labour_pct" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=labour_pct" data-fmt="signedpct" data-good="down">—</b> of revenue, vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Waste share of food cost</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=waste_pct" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=waste_pct" data-fmt="signedpct" data-good="down">—</b> vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Fri/Sat dinner ticket time, p90</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=peak_ticket" data-fmt="min">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=peak_ticket" data-fmt="signedpct" data-good="down">—</b> vs before</span></div>
+      <div class="mo-tile"><span class="mo-l">Average review rating</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=rating" data-fmt="star">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=rating" data-fmt="signedpct" data-good="up">—</b> vs before</span></div>
+    </div>
+
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Covers per week, with the next four weeks forecast</h2>
+        <p>Guests seated each week from the QR-order log. The dashed line marks the week the menu, par-level and rota changes went live. Forecast bars show the forecast model's central estimate with an 80% range.</p>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="muted"></span>Before the changes</li><li><span class="mo-sw" data-sw="0"></span>After the changes</li><li><span class="mo-sw" data-sw="1"></span>Forecast</li></ul>
+        <div class="mo-chart" data-draw="weekly-covers" data-source="weekly" style="min-height: 260px"></div>
+      </div>
+    </div>
+
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Effect of the 6 July changes, with the season taken out</h2>
+        <p>The simulator was run a second time over the same weeks with the same guests and none of the changes. Both columns cover 6 July to 25 October, so weather and holidays affect them equally. The run without changes also lacks the small demand lift the simulator assumes the changes bring.</p>
+        <div class="mo-tbl-box">
+          <table data-source="effects" data-row-key="metric">
+            <thead><tr><th data-field="label">Measure</th><th class="mo-num" data-field="nochange">Without the changes</th><th class="mo-num" data-field="actual">With the changes</th><th class="mo-num" data-field="effect_pct">Effect</th></tr></thead>
+            <tbody data-draw="effect-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>What changed on 6 July and what moved</h2>
+        <p>Each change came out of one of the analyses. Before and after are raw weekly averages for the two periods, which sit in different seasons; the table above gives the season-free effect.</p>
+        <div class="mo-tbl-box">
+          <table data-source="actions" data-row-key="n">
+            <thead><tr><th data-field="area">Area</th><th data-field="action">Change</th><th data-field="metric">Measured by</th><th class="mo-num" data-field="before">Before</th><th class="mo-num" data-field="after">After</th><th class="mo-num" data-field="delta_pct">Change</th></tr></thead>
+            <tbody data-draw="actions-rows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mo-card">
+        <h2>Still weak</h2>
+        <p>The places the same data says to work on next.</p>
+        <div class="mo-flags">
+          <div class="mo-flag"><span class="mo-ft">Friday and Saturday lunch</span>The extra line cook only covers dinner, so the changes made weekend lunch slightly slower, not faster. At the Friday noon rush the median ticket is now <b data-draw="kpi" data-source="hourly" data-field="median_ticket_after" data-where="weekday=Fri&amp;hour=12" data-fmt="min">—</b>, against <b data-draw="kpi" data-source="hourly" data-field="median_ticket_before" data-where="weekday=Fri&amp;hour=12" data-fmt="min">—</b> before the volume grew, with <b data-draw="kpi" data-source="hourly" data-field="cooks_scheduled" data-where="weekday=Fri&amp;hour=12" data-fmt="int">—</b> cooks on for a need of <b data-draw="kpi" data-source="hourly" data-field="cooks_needed" data-where="weekday=Fri&amp;hour=12" data-fmt="int">—</b>.</div>
+          <div class="mo-flag"><span class="mo-ft">Portions</span>Net sentiment on portion size went from <b data-draw="kpi" data-source="review_themes" data-field="net" data-where="id=portions|before" data-fmt="signed">—</b> to <b data-draw="kpi" data-source="review_themes" data-field="net" data-where="id=portions|after" data-fmt="signed">—</b> after the coleslaw and Chicken Fried Steak portions were trimmed. The waste saving is real, but guests notice the smaller steak plate.</div>
+          <div class="mo-flag"><span class="mo-ft">Long waits still sink ratings</span>Wait complaints fell to <b data-draw="kpi" data-source="review_themes" data-field="negative_pct" data-where="id=wait|after" data-fmt="pct">—</b> of reviews from <b data-draw="kpi" data-source="review_themes" data-field="negative_pct" data-where="id=wait|before" data-fmt="pct">—</b>, but a ticket over 30 minutes still averages <b data-draw="kpi" data-source="ticket_vs_rating" data-field="avg_rating" data-where="bucket=30–40" data-fmt="star">—</b> stars. Those tickets now come mostly at weekend lunch.</div>
+          <div class="mo-flag"><span class="mo-ft">Produce prices</span>Romaine and mixed greens are up <b data-draw="kpi" data-source="supplier_summary" data-field="price_change_pct" data-where="ingredient=greens" data-fmt="signedpct">—</b> over the year and the alternative quote is dearer still. Salads are the fastest-growing entrées, so this is the margin to watch.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ MENU -->
+  <section id="menu" class="mo-page" hidden>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Menu engineering: popularity against contribution margin</h2>
+        <p>Each dish is placed by its share of orders inside its section of the QR menu (horizontal) and the margin it leaves after ingredients (vertical). The vertical rule is 70% of a fair share of the group's orders; the horizontal rule is the group's sales-weighted average margin. Stars sell well and earn well; plowhorses sell but earn little; puzzles earn but don't sell; dogs do neither. Dot size is orders per week.</p>
+        <div class="mo-controls">
+          <label>Section <select id="menu-group"><option value="Starters">Starters</option><option value="Burgers & Sandwiches">Burgers &amp; Sandwiches</option><option value="From the Grill">From the Grill</option><option value="Comfort Plates">Comfort Plates</option><option value="Salads">Salads</option><option value="Desserts">Desserts</option><option value="Sides">Sides</option><option value="Drinks">Drinks</option></select></label>
+          <label>Period <select id="menu-period"><option value="before">Before the changes</option><option value="after">After the changes</option></select></label>
+        </div>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="2"></span>Star</li><li><span class="mo-sw" data-sw="0"></span>Plowhorse</li><li><span class="mo-sw" data-sw="3"></span>Puzzle</li><li><span class="mo-sw" data-sw="7"></span>Dog</li></ul>
+        <div class="mo-chart" data-draw="menu-scatter" data-source="menu" style="min-height: 340px"></div>
+      </div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Every item, before and after</h2>
+        <p>Weekly orders and weekly contribution margin for each period. Click a heading to sort.</p>
+        <div class="mo-tbl-box">
+          <table data-source="menu" data-row-key="item">
+            <thead><tr>
+              <th data-field="name"><button class="mo-sort" type="button">Item</button></th>
+              <th data-field="group"><button class="mo-sort" type="button">Group</button></th>
+              <th data-field="class_before"><button class="mo-sort" type="button">Class before</button></th>
+              <th data-field="class_after"><button class="mo-sort" type="button">Class after</button></th>
+              <th class="mo-num" data-field="price_after"><button class="mo-sort" type="button">Price</button></th>
+              <th class="mo-num" data-field="food_cost_pct"><button class="mo-sort" type="button">Food cost %</button></th>
+              <th class="mo-num" data-field="cm_unit"><button class="mo-sort" type="button">Margin / plate</button></th>
+              <th class="mo-num" data-field="units_wk_before"><button class="mo-sort" type="button">Orders / wk before</button></th>
+              <th class="mo-num" data-field="units_wk_after"><button class="mo-sort" type="button">Orders / wk after</button></th>
+              <th class="mo-num" data-field="cm_wk_before"><button class="mo-sort" type="button">Margin / wk before</button></th>
+              <th class="mo-num" data-field="cm_wk_after" aria-sort="descending"><button class="mo-sort" type="button">Margin / wk after</button></th>
+            </tr></thead>
+            <tbody data-draw="menu-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ DEMAND -->
+  <section id="demand" class="mo-page" hidden>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Covers forecast, next 4 weeks</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=forecast_covers" data-fmt="int">—</span><span class="mo-d">last 4 weeks: <b data-draw="kpi" data-source="kpis" data-field="before" data-where="metric=forecast_covers" data-fmt="int">—</b></span></div>
+      <div class="mo-tile"><span class="mo-l">Forecast error, 4 rolling holdouts</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="value" data-where="metric=forecast_mape" data-fmt="pct">—</span><span class="mo-d">mean absolute % error, daily covers</span></div>
+      <div class="mo-tile"><span class="mo-l">Table turn, seated to paid</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=avg_turn" data-fmt="min">—</span><span class="mo-d">average after the changes</span></div>
+      <div class="mo-tile"><span class="mo-l">Median ticket time</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=median_ticket" data-fmt="min">—</span><span class="mo-d">fired to served, after the changes</span></div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Daily covers: last 16 weeks and the forecast</h2>
+        <p>The model is <b data-draw="kpi" data-source="kpis" data-field="value" data-where="metric=forecast_model" data-fmt="text">—</b>, chosen below. Holidays and closures are swapped for the same day a week earlier before fitting. The dashed segment is the prediction for the final four weeks made without seeing them. The shaded band is the 80% range on the four weeks ahead, which hold no public holiday.</p>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="0"></span>Actual covers</li><li><span class="mo-sw" data-sw="1"></span>Forecast (dashed: holdout test)</li></ul>
+        <div class="mo-chart" data-draw="daily-chart" data-source="daily" style="min-height: 280px"></div>
+      </div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Forecast models compared</h2>
+        <p>Each model forecast four separate 4-week windows using only the data before each window. Error is the mean absolute percentage error on daily covers, holidays excluded. The lowest average wins.</p>
+        <div class="mo-tbl-box">
+          <table data-source="forecast_models" data-row-key="model">
+            <thead><tr><th data-field="model">Model</th><th class="mo-num" data-field="mape">Average error</th><th class="mo-num" data-field="mape_last">Error, last window</th><th data-field="chosen">Used</th></tr></thead>
+            <tbody data-draw="model-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>When guests arrive</h2>
+        <p>Average covers seated per hour by weekday since the changes. This profile, scaled by the forecast, drives the rota.</p>
+        <div class="mo-heat" data-draw="hour-heat" data-source="hourly"></div>
+      </div>
+      <div class="mo-card">
+        <h2>Prep pars for the next four weeks</h2>
+        <p>Portions to prep each day: the last eight weeks' average for that weekday, scaled by the forecast, plus a 12% buffer. These replace the fixed par sheet.</p>
+        <div class="mo-tbl-box">
+          <table data-source="item_forecast" data-row-key="item">
+            <thead><tr><th data-field="name">Item</th><th class="mo-num" data-field="forecast_weekly_units">/ wk</th><th class="mo-num" data-field="par_mon">Mon</th><th class="mo-num" data-field="par_tue">Tue</th><th class="mo-num" data-field="par_wed">Wed</th><th class="mo-num" data-field="par_thu">Thu</th><th class="mo-num" data-field="par_fri">Fri</th><th class="mo-num" data-field="par_sat">Sat</th><th class="mo-num" data-field="par_sun">Sun</th></tr></thead>
+            <tbody data-draw="par-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ ROTA -->
+  <section id="rota" class="mo-page" hidden>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Labour, rota before the changes</span><span class="mo-v" data-draw="kpi" data-source="labour" data-field="labour_pct" data-where="key=before|Week" data-fmt="pct">—</span><span class="mo-d">of weekly sales</span></div>
+      <div class="mo-tile"><span class="mo-l">Labour, current rota</span><span class="mo-v" data-draw="kpi" data-source="labour" data-field="labour_pct" data-where="key=current|Week" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="labour" data-field="hours" data-where="key=current|Week" data-fmt="one">—</b> hours a week</span></div>
+      <div class="mo-tile"><span class="mo-l">Labour, proposed rota</span><span class="mo-v" data-draw="kpi" data-source="labour" data-field="labour_pct" data-where="key=proposed|Week" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="labour" data-field="hours" data-where="key=proposed|Week" data-fmt="one">—</b> hours a week</span></div>
+    </div>
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>Servers: scheduled minus needed, by hour</h2>
+        <p>Need is one server per 4.5 occupied tables, from the arrival profile. Red is short-staffed, blue is over. The current rota leaves no server on the floor between the lunch and dinner shifts.</p>
+        <div class="mo-heat" data-draw="rota-heat-servers" data-source="hourly"></div>
+      </div>
+      <div class="mo-card">
+        <h2>Line cooks: scheduled minus needed, by hour</h2>
+        <p>Need is one cook per 16 hot plates an hour. The Friday and Saturday lunch rush now runs two cooks short.</p>
+        <div class="mo-heat" data-draw="rota-heat-cooks" data-source="hourly"></div>
+      </div>
+    </div>
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>Labour cost by day, current against proposed</h2>
+        <p>The proposed rota staffs each block at its quiet-hour need and adds a peak shift of at least four hours over the busy hours, which closes the afternoon gap and the weekend lunch shortfall for about the same money.</p>
+        <div class="mo-tbl-box">
+          <table data-source="labour" data-row-key="key">
+            <thead><tr><th data-field="weekday">Day</th><th data-field="plan">Plan</th><th class="mo-num" data-field="hours">Hours</th><th class="mo-num" data-field="cost">Cost</th><th class="mo-num" data-field="sales">Sales</th><th class="mo-num" data-field="labour_pct">Labour %</th></tr></thead>
+            <tbody data-draw="labour-rows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mo-card">
+        <h2>Shifts</h2>
+        <p>Pick a day and a plan.</p>
+        <div class="mo-controls">
+          <label>Day <select id="rota-day"><option>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option selected>Fri</option><option>Sat</option><option>Sun</option></select></label>
+          <label>Plan <select id="rota-plan"><option value="proposed">Proposed</option><option value="current">Current</option></select></label>
+        </div>
+        <div class="mo-tbl-box">
+          <table data-source="rota" data-row-key="key">
+            <thead><tr><th data-field="role">Role</th><th data-field="shift">Shift</th><th data-field="start">From</th><th data-field="end">To</th><th class="mo-num" data-field="headcount">People</th><th class="mo-num" data-field="hours">Hours</th><th class="mo-num" data-field="cost">Cost</th></tr></thead>
+            <tbody data-draw="rota-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SUPPLIERS -->
+  <section id="suppliers" class="mo-page" hidden>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Saving if every "Switch" line moved</span><span class="mo-v" data-draw="kpi" data-source="supplier_saving" data-field="total" data-row="0" data-fmt="money">—</span><span class="mo-d">a year, at this year's volumes</span></div>
+      <div class="mo-tile"><span class="mo-l">Lines worth switching</span><span class="mo-v" data-draw="kpi" data-source="supplier_saving" data-field="count" data-row="0" data-fmt="int">—</span><span class="mo-d">of <b data-draw="kpi" data-source="supplier_saving" data-field="lines" data-row="0" data-fmt="int">—</b> ingredient lines quoted weekly</span></div>
+      <div class="mo-tile"><span class="mo-l">Ground beef, price drift over the year</span><span class="mo-v" data-draw="kpi" data-source="supplier_summary" data-field="price_change_pct" data-where="ingredient=beef" data-fmt="signedpct">—</span><span class="mo-d">first four weeks to last four</span></div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Price index of the biggest lines, current supplier</h2>
+        <p>Weekly quoted price, indexed to the first week of the year. Beef and steak climbed through spring; greens swing with the season.</p>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="0"></span>Ground beef</li><li><span class="mo-sw" data-sw="1"></span>Ribeye / strip</li><li><span class="mo-sw" data-sw="2"></span>Pork back ribs</li><li><span class="mo-sw" data-sw="3"></span>Romaine &amp; greens</li></ul>
+        <div class="mo-chart" data-draw="price-lines" data-source="supplier_quotes" style="min-height: 280px"></div>
+      </div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Spend by ingredient and the alternative quote</h2>
+        <p>Annual spend with the current supplier against what the same volume would have cost on the alternative supplier's weekly quotes. "Switch" where the saving is over 4%.</p>
+        <div class="mo-tbl-box">
+          <table data-source="supplier_summary" data-row-key="ingredient">
+            <thead><tr><th data-field="name">Ingredient</th><th data-field="unit">Unit</th><th data-field="current_supplier">Current supplier</th><th class="mo-num" data-field="current_spend">Spend</th><th data-field="alt_supplier">Alternative</th><th class="mo-num" data-field="alt_spend">Alt. spend</th><th class="mo-num" data-field="saving_switch">Saving</th><th class="mo-num" data-field="saving_switch_pct">Saving %</th><th class="mo-num" data-field="price_change_pct">Price drift</th><th data-field="recommendation">Call</th></tr></thead>
+            <tbody data-draw="supplier-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ REVIEWS -->
+  <section id="reviews" class="mo-page" hidden>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Average rating after the changes</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=rating" data-fmt="star">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="before" data-where="metric=rating" data-fmt="star">—</b> before, across <b data-draw="kpi" data-source="kpis" data-field="basis" data-where="metric=rating" data-fmt="text">—</b></span></div>
+      <div class="mo-tile"><span class="mo-l">Reviews with a QR-menu complaint</span><span class="mo-v" data-draw="kpi" data-source="review_themes" data-field="negative_pct" data-where="id=qr menu|after" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="review_themes" data-field="negative_pct" data-where="id=qr menu|before" data-fmt="pct">—</b> before photos and pay-at-table went on the landing screen</span></div>
+      <div class="mo-tile"><span class="mo-l">Rating when the ticket ran 30–40 min</span><span class="mo-v" data-draw="kpi" data-source="ticket_vs_rating" data-field="avg_rating" data-where="bucket=30–40" data-fmt="star">—</span><span class="mo-d">against <b data-draw="kpi" data-source="ticket_vs_rating" data-field="avg_rating" data-where="bucket=15–20" data-fmt="star">—</b> at 15–20 min</span></div>
+    </div>
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>Average rating by month</h2>
+        <p>Google, Yelp and TripAdvisor together. Hover for the number of reviews.</p>
+        <div class="mo-chart" data-draw="rating-line" data-source="reviews_monthly" style="min-height: 240px"></div>
+      </div>
+      <div class="mo-card">
+        <h2>Rating against the reviewer's own ticket time</h2>
+        <p>Each review is matched to the party's order, so the wait is measured, not remembered. Bars past 30 minutes take the alert colour.</p>
+        <div class="mo-chart" data-draw="ticket-rating-bars" data-source="ticket_vs_rating" style="min-height: 240px"></div>
+      </div>
+    </div>
+    <div class="mo-grid">
+      <div class="mo-card">
+        <h2>Themes: net sentiment before and after</h2>
+        <p>Share of mentions that were positive minus the share negative. Each sentence is tagged by keyword rules that read only the review text; they agree with the simulator's hidden tags <b data-draw="kpi" data-source="kpis" data-field="value" data-where="metric=tagger_agreement" data-fmt="pct">—</b> of the time. Grey is before the changes, blue after.</p>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="muted"></span>Before</li><li><span class="mo-sw" data-sw="0"></span>After</li></ul>
+        <div class="mo-chart" data-draw="theme-dumbbell" data-source="review_themes" style="min-height: 260px"></div>
+      </div>
+      <div class="mo-card">
+        <h2>Sample reviews</h2>
+        <p>Five from each period, with the tags the keyword rules gave them. This is a simulated dataset: the reviews are generated, not real guests' words.</p>
+        <ul class="mo-list" data-draw="quote-list" data-source="review_quotes"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ WASTE -->
+  <section id="waste" class="mo-page" hidden>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Waste per week after the changes</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="after" data-where="metric=waste_cost" data-fmt="money">—</span><span class="mo-d"><b data-draw="kpi" data-source="kpis" data-field="delta_pct" data-where="metric=waste_cost" data-fmt="signedpct" data-good="down">—</b> vs <b data-draw="kpi" data-source="kpis" data-field="before" data-where="metric=waste_cost" data-fmt="money">—</b> before</span></div>
+      <div class="mo-tile"><span class="mo-l">Waste over the year</span><span class="mo-v" data-draw="kpi" data-source="kpis" data-field="value" data-where="metric=waste_cost" data-fmt="money">—</span><span class="mo-d">at ingredient cost</span></div>
+      <div class="mo-tile"><span class="mo-l">Over-prep waste per week</span><span class="mo-v" data-draw="kpi" data-source="actions" data-field="after" data-where="n=5" data-fmt="money">—</span><span class="mo-d"><b data-draw="kpi" data-source="actions" data-field="delta_pct" data-where="n=5" data-fmt="signedpct" data-good="down">—</b> since pars follow the forecast</span></div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Waste cost per week: over-production and plate waste</h2>
+        <p>Over-production is prepped portions binned at close; plate waste is food that came back to the bus station, weighed by item. The dashed line is the change date.</p>
+        <ul class="mo-legend"><li><span class="mo-sw" data-sw="0"></span>Over-prep</li><li><span class="mo-sw" data-sw="1"></span>Plate waste</li></ul>
+        <div class="mo-chart" data-draw="waste-weekly" data-source="waste_weekly" style="min-height: 260px"></div>
+      </div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>Waste by item</h2>
+        <p>Weekly waste cost by item and kind, before and after.</p>
+        <div class="mo-tbl-box">
+          <table data-source="waste_items" data-row-key="key">
+            <thead><tr><th data-field="name">Item</th><th data-field="kind">Kind</th><th class="mo-num" data-field="units_wk_before">Portions / wk before</th><th class="mo-num" data-field="units_wk_after">Portions / wk after</th><th class="mo-num" data-field="cost_wk_before">Cost / wk before</th><th class="mo-num" data-field="cost_wk_after">Cost / wk after</th><th class="mo-num" data-field="change_pct">Change</th><th class="mo-num" data-field="cost_year">Cost, year</th></tr></thead>
+            <tbody data-draw="waste-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ NEXT ROUND -->
+  <section id="plan" class="mo-page" hidden>
+    <p class="mo-take">These are projections from the simulator, not results. The same weeks were run a third time with the fixes below added. The price response and staffing effects are the simulator's assumptions.</p>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Projected profit per week</span><span class="mo-v" data-draw="kpi" data-source="effects" data-field="plan" data-where="metric=profit" data-fmt="money">—</span><span class="mo-d"><b data-draw="kpi" data-source="effects" data-field="plan_pct" data-where="metric=profit" data-fmt="signedpct" data-good="up">—</b> vs now</span></div>
+      <div class="mo-tile"><span class="mo-l">Fri/Sat lunch ticket, p90</span><span class="mo-v" data-draw="kpi" data-source="effects" data-field="plan" data-where="metric=lunch_p90" data-fmt="min">—</span><span class="mo-d"><b data-draw="kpi" data-source="effects" data-field="plan_pct" data-where="metric=lunch_p90" data-fmt="signedpct" data-good="down">—</b> vs now</span></div>
+      <div class="mo-tile"><span class="mo-l">Food cost</span><span class="mo-v" data-draw="kpi" data-source="effects" data-field="plan" data-where="metric=food_pct" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="effects" data-field="plan_pct" data-where="metric=food_pct" data-fmt="signedpct" data-good="down">—</b> vs now</span></div>
+      <div class="mo-tile"><span class="mo-l">Tickets over 30 minutes</span><span class="mo-v" data-draw="kpi" data-source="effects" data-field="plan" data-where="metric=slow_share" data-fmt="pct">—</span><span class="mo-d"><b data-draw="kpi" data-source="effects" data-field="plan_pct" data-where="metric=slow_share" data-fmt="signedpct" data-good="down">—</b> vs now</span></div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>The fixes</h2>
+        <p>Each fix answers one of the weak spots on the Overview. Now and projected cover the same 16 weeks.</p>
+        <div class="mo-tbl-box">
+          <table data-source="plan" data-row-key="n">
+            <thead><tr><th data-field="area">Area</th><th data-field="change">Fix</th><th data-field="label">Measured by</th><th class="mo-num" data-field="actual">Now</th><th class="mo-num" data-field="plan">Projected</th><th data-field="note">Note</th></tr></thead>
+            <tbody data-draw="plan-rows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mo-card">
+        <h2>Every measure, now and projected</h2>
+        <div class="mo-tbl-box">
+          <table data-source="effects" data-row-key="metric">
+            <thead><tr><th data-field="label">Measure</th><th class="mo-num" data-field="actual">Now</th><th class="mo-num" data-field="plan">Projected</th><th class="mo-num" data-field="plan_pct">Change</th></tr></thead>
+            <tbody data-draw="plan-effect-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ LIVE QR ORDERS -->
+  <section id="live" class="mo-page" hidden>
+    <p class="mo-take">Orders placed on the Maple &amp; Oak QR menu, as of the last sync on <b data-draw="kpi" data-source="qr_live_summary" data-field="synced" data-where="id=all" data-fmt="text">—</b>. Ask Claude to sync QR orders to bring this up to date. Tickets, open tables and bill requests as they happen are in the <a class="mo-link" href="https://claude.ai/artifact/YOUR-MENU-ID#owner" target="_blank" rel="noopener">owner console</a>.</p>
+    <div class="mo-tiles">
+      <div class="mo-tile"><span class="mo-l">Rounds ordered</span><span class="mo-v" data-draw="kpi" data-source="qr_live_summary" data-field="rounds" data-where="id=all" data-fmt="int">—</span><span class="mo-d">across <b data-draw="kpi" data-source="qr_live_summary" data-field="tables" data-where="id=all" data-fmt="int">—</b> tables</span></div>
+      <div class="mo-tile"><span class="mo-l">Items ordered</span><span class="mo-v" data-draw="kpi" data-source="qr_live_summary" data-field="items" data-where="id=all" data-fmt="int">—</span><span class="mo-d">from phones</span></div>
+      <div class="mo-tile"><span class="mo-l">Food and drink sales</span><span class="mo-v" data-draw="kpi" data-source="qr_live_summary" data-field="revenue" data-where="id=all" data-fmt="money2">—</span><span class="mo-d">before tax and tip</span></div>
+    </div>
+    <div class="mo-grid mo-wide">
+      <div class="mo-card">
+        <h2>What guests ordered</h2>
+        <p>Every item ordered from the QR menu, most ordered first. Empty until the first real order is synced.</p>
+        <div class="mo-tbl-box">
+          <table data-source="qr_live_items" data-row-key="item">
+            <thead><tr><th data-field="name">Item</th><th class="mo-num" data-field="qty">Ordered</th><th class="mo-num" data-field="revenue">Sales</th></tr></thead>
+            <tbody data-draw="live-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const C = dash.colors;
+  const MUTED = 'var(--cds-chart-muted)';
+  const CHANGE = '2026-07-06';                                   // the Monday the changes went live
+  const F = {
+    int: d3.format(','), money: d3.format('$,.0f'), money2: d3.format('$,.2f'), one: d3.format('.1f'), star: d3.format('.2f'),
+    pct: v => d3.format('.1f')(v) + '%', signedpct: v => d3.format('+.1f')(v) + '%', abspct: v => d3.format('.1f')(Math.abs(v)) + '%',
+    signed: d3.format('+.0f'), min: v => d3.format('.1f')(v) + ' min', text: v => String(v),
+  };
+  const dateF = d3.utcFormat('%b %-d'), monthF = d3.utcFormat('%b %Y');
+  const D = s => new Date(s.slice(0, 10) + 'T00:00:00Z');
+  const hhmm = h => { const m = Math.round((h % 1) * 60); return `${Math.floor(h) % 24}:${m < 10 ? '0' : ''}${m}`; };
+  const okRows = id => { const d = dash.data(id); return d.status === 'ok' ? d.data : null; };
+  const wait = (el, status) => { el.classList.toggle('dash-skeleton', status === 'loading'); };
+  const fail = el => { el.replaceChildren(); const p = document.createElement('div'); p.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:6px;min-height:inherit;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)'; const dot = document.createElement('span'); dot.style.cssText = 'width:.375rem;height:.375rem;border-radius:50%;background:var(--color-bad)'; p.append(dot, 'Failed to load'); el.append(p); };
+  const mix = (color, pctOf) => `color-mix(in oklab, ${color} ${Math.round(pctOf)}%, var(--color-panel))`;
+
+  // ---- legend swatches take the series colors
+  document.querySelectorAll('.mo-sw[data-sw]').forEach(s => { const k = s.dataset.sw; s.style.background = k === 'muted' ? MUTED : C[+k]; });
+
+  // ---- tabs
+  const pages = () => [...document.querySelectorAll('.mo-page')];
+  const showTab = id => {
+    pages().forEach(p => { p.hidden = p.id !== id; });
+    document.querySelectorAll('.mo-tab').forEach(b => b.setAttribute('aria-selected', String(b.getAttribute('aria-controls') === id)));
+  };
+  document.querySelectorAll('.mo-tab').forEach(b => b.addEventListener('click', () => { showTab(b.getAttribute('aria-controls')); dash.setLink(b.getAttribute('aria-controls')); }));
+  const first = location.hash.slice(1);
+  if (first && pages().some(p => p.id === first)) showTab(first);
+
+  // ---- a calc: what switching every "Switch" line would save
+  dash.calc('supplier_saving', { inputs: ['supplier_summary'], title: 'Supplier switching saving',
+    description: 'Sum of the annual saving on ingredient lines the analysis marks Switch, with the count of such lines.',
+    fn: (supplier_summary) => {
+      const sw = supplier_summary.filter(r => r.recommendation === 'Switch');
+      return [{ total: sw.reduce((s, r) => s + Number(r.saving_switch), 0), count: sw.length, lines: supplier_summary.length }];
+    } });
+
+  // ---- generic number filler: data-source / data-field / data-where|data-row / data-fmt
+  const whereOf = s => s.split('&').map(kv => kv.split('=').map(decodeURIComponent));
+  dash.draw('kpi', el => {
+    const d = dash.data(el.dataset.source);
+    el.classList.remove('is-good', 'is-bad', 'is-flat');
+    if (d.status !== 'ok') { el.textContent = '—'; wait(el, d.status); return; }
+    wait(el, 'ok');
+    let row;
+    if (el.dataset.where) { const w = whereOf(el.dataset.where); row = d.data.find(r => w.every(([k, v]) => String(r[k]) === v)); }
+    else row = d.data[+(el.dataset.row || 0)];
+    const v = row ? row[el.dataset.field] : null;
+    if (v === null || v === undefined || v === '') { el.textContent = '—'; return; }
+    const num = Number(v);
+    el.textContent = (F[el.dataset.fmt] || F.text)(isNaN(num) || el.dataset.fmt === 'text' ? v : num);
+    if (el.dataset.good && !isNaN(num)) {
+      const up = num > 0.05, down = num < -0.05;
+      el.classList.add(!up && !down ? 'is-flat' : (el.dataset.good === 'up') === up ? 'is-good' : 'is-bad');
+    }
+  });
+
+  // ---- svg helpers
+  function frame(el, h, m) {
+    el.replaceChildren();
+    const w = Math.max(300, el.clientWidth);
+    const svg = d3.select(el).append('svg').attr('viewBox', [0, 0, w, h]).attr('width', '100%').attr('class', 'mo-anim');
+    return { svg, w, h, m };
+  }
+  function tipIn(el) {
+    let t = document.createElement('div'); t.className = 'mo-tip'; t.hidden = true; el.appendChild(t);
+    return {
+      show(x, y, html) { t.innerHTML = ''; t.append(...html); t.hidden = false; const bw = el.clientWidth, tw = t.offsetWidth; t.style.left = Math.max(0, Math.min(bw - tw, x + 12)) + 'px'; t.style.top = Math.max(0, y - t.offsetHeight - 10) + 'px'; },
+      hide() { t.hidden = true; },
+    };
+  }
+  const line = (k, v, sw) => { const d = document.createElement('div'); if (sw) { const s = document.createElement('span'); s.className = 'mo-sw'; s.style.background = sw; d.append(s); } d.append(k ? `${k}: ${v}` : v); return d; };
+  const key = txt => { const s = document.createElement('span'); s.className = 'mo-tk'; s.textContent = txt; return s; };
+  function yAxis(svg, y, left, top, fmt, ticks) {
+    const g = svg.append('g').attr('transform', `translate(${left},${top})`).call(d3.axisLeft(y).ticks(ticks || 5).tickFormat(fmt).tickSize(0).tickPadding(8)).attr('font-size', null).attr('font-family', null);
+    g.select('.domain').remove(); g.selectAll('text').attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)');
+    return g;
+  }
+  function measureLeft(svg, y, fmt, ticks) {
+    const g = yAxis(svg, y, 0, 0, fmt, ticks); const wmax = d3.max(g.selectAll('text').nodes(), n => n.getComputedTextLength()) || 0; g.remove(); return Math.ceil(wmax) + 14;
+  }
+  function grid(svg, y, left, right, ticks) {
+    svg.append('g').selectAll('line').data(y.ticks(ticks || 5)).join('line').attr('x1', left).attr('x2', right).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+  }
+  function xText(svg, x, yy, txt, anchor) { return svg.append('text').attr('x', x).attr('y', yy).attr('text-anchor', anchor || 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text(txt); }
+  function refLine(svg, x, top, bottom, label) {
+    svg.append('line').attr('x1', x).attr('x2', x).attr('y1', top).attr('y2', bottom).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+    if (label) xText(svg, x + 4, top + 10, label, 'start');
+  }
+
+  // ---- weekly covers
+  dash.draw('weekly-covers', el => {
+    const d = dash.data('weekly'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = d.data.map(r => ({ ...r, dt: D(r.week_start), covers: r.covers === null ? null : +r.covers, forecast: r.forecast === null ? null : +r.forecast, lo: r.lo === null ? null : +r.lo, hi: r.hi === null ? null : +r.hi }));
+    const H = 260, top = 14, bottom = 28; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const y = d3.scaleLinear([0, d3.max(rows, r => Math.max(r.covers || 0, r.hi || 0)) * 1.05], [H - bottom, top]).nice();
+    const left = measureLeft(svg, y, F.int), right = w - 8;
+    const x = d3.scaleBand(rows.map(r => r.week_start), [left, right]).paddingInner(0.25);
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, F.int);
+    const bw = x.bandwidth();
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.week_start)).attr('width', bw).attr('rx', Math.min(3, bw / 2))
+      .attr('y', r => y(r.kind === 'forecast' ? r.forecast : r.covers)).attr('height', r => y(0) - y(r.kind === 'forecast' ? r.forecast : r.covers))
+      .attr('fill', r => r.kind === 'forecast' ? C[1] : r.period === 'after' ? C[0] : MUTED).attr('opacity', r => r.kind === 'forecast' ? 0.6 : 1);
+    svg.append('g').selectAll('line').data(rows.filter(r => r.kind === 'forecast')).join('line').attr('x1', r => x(r.week_start) + bw / 2).attr('x2', r => x(r.week_start) + bw / 2)
+      .attr('y1', r => y(r.lo)).attr('y2', r => y(r.hi)).attr('stroke', C[1]).attr('stroke-width', 2).attr('stroke-linecap', 'round');
+    const ci = rows.findIndex(r => r.week_start === CHANGE);
+    if (ci >= 0) refLine(svg, x(CHANGE) - (x.step() - bw) / 2, top, H - bottom, 'Changes live');
+    const months = d3.utcMonth.range(rows[0].dt, rows[rows.length - 1].dt);
+    months.forEach(mth => { const r = rows.find(q => q.dt >= mth); if (r) xText(svg, x(r.week_start), H - 8, d3.utcFormat('%b')(mth), 'start'); });
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.week_start) - (x.step() - bw) / 2).attr('width', x.step()).attr('y', top).attr('height', H - bottom - top).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, el); const html = [key(`Week of ${dateF(r.dt)}`)];
+        if (r.kind === 'forecast') html.push(line('Forecast', F.int(r.forecast), C[1]), line('80% range', `${F.int(r.lo)} – ${F.int(r.hi)}`));
+        else html.push(line('Covers', F.int(r.covers), r.period === 'after' ? C[0] : MUTED), line('Revenue', F.money(r.revenue)), line('Median ticket', F.min(r.median_ticket)));
+        tip.show(px, py, html); }).on('pointerleave', tip.hide);
+  });
+
+  // ---- tables: a generic sorted-rows writer
+  const sortState = table => { const th = table.querySelector('th[aria-sort="ascending"], th[aria-sort="descending"]'); return th ? { field: th.dataset.field, dir: th.getAttribute('aria-sort') === 'ascending' ? 1 : -1 } : null; };
+  document.querySelectorAll('.mo-sort').forEach(btn => btn.addEventListener('click', () => {
+    const th = btn.closest('th'), table = th.closest('table'), cur = th.getAttribute('aria-sort');
+    table.querySelectorAll('th').forEach(h => h.removeAttribute('aria-sort'));
+    th.setAttribute('aria-sort', cur === 'descending' ? 'ascending' : 'descending');
+    const body = table.querySelector('tbody[data-draw]'); if (body) dash.draw(body.dataset.draw);
+  }));
+  function tableRows(el, id, keyField, cells, filter) {
+    const d = dash.data(id); const table = el.closest('table'); wait(el, d.status);
+    if (d.status !== 'ok') { el.replaceChildren(); return; }
+    let rows = filter ? d.data.filter(filter) : d.data.slice();
+    const s = sortState(table);
+    if (s) rows.sort((a, b) => { const av = a[s.field], bv = b[s.field]; const an = Number(av), bn = Number(bv); const r = (av === null || av === '') - (bv === null || bv === '') || (!isNaN(an) && !isNaN(bn) ? an - bn : String(av).localeCompare(String(bv))); return r * s.dir; });
+    const frag = document.createDocumentFragment();
+    for (const r of rows) {
+      const tr = document.createElement('tr'); tr.dataset.key = r[keyField];
+      for (const c of cells) { const td = document.createElement('td'); if (c.num) td.className = 'mo-num'; const out = c.f(r); if (out instanceof Node) td.append(out); else td.textContent = out; if (c.cls) td.classList.add(...[].concat(c.cls(r) || [])); tr.append(td); }
+      frag.append(tr);
+    }
+    el.replaceChildren(frag);
+  }
+  const nz = (v, f) => (v === null || v === undefined || v === '') ? '—' : f(Number(v));
+  const signClass = (v, good) => { const n = Number(v); if (isNaN(n) || Math.abs(n) < 0.05) return 'is-flat'; return ((good === 'up') === (n > 0)) ? 'is-good' : 'is-bad'; };
+  const CLASS_COLOR = { Star: C[2], Plowhorse: C[0], Puzzle: C[3], Dog: C[7] };
+  const pill = cls => { const s = document.createElement('span'); s.className = 'mo-pill'; s.textContent = cls; if (CLASS_COLOR[cls]) { s.style.background = CLASS_COLOR[cls]; s.style.color = 'var(--color-bg)'; s.style.borderColor = 'transparent'; } return s; };
+  const unitF = (v, u) => u === '$' ? F.money2(v) : u === '$/wk' ? F.money(v) : u === '%' ? F.pct(v) : u === 'min' ? F.min(v) : u === '/wk' ? F.one(v) : F.one(v);
+
+  dash.draw('actions-rows', el => tableRows(el, 'actions', 'n', [
+    { f: r => r.area }, { f: r => r.action }, { f: r => r.metric },
+    { num: true, f: r => nz(r.before, v => unitF(v, r.unit)) }, { num: true, f: r => nz(r.after, v => unitF(v, r.unit)) },
+    { num: true, f: r => nz(r.delta_pct, F.signedpct), cls: r => signClass(r.delta_pct, r.good) },
+  ]));
+  const effF = (v, u) => u === '$' ? F.money(v) : u === '%' ? F.pct(v) : u === 'min' ? F.min(v) : u === '★' ? F.star(v) : Math.abs(v) >= 100 ? F.int(v) : F.one(v);
+  dash.draw('effect-rows', el => tableRows(el, 'effects', 'metric', [
+    { f: r => r.label }, { num: true, f: r => nz(r.nochange, v => effF(v, r.unit)) }, { num: true, f: r => nz(r.actual, v => effF(v, r.unit)) },
+    { num: true, f: r => nz(r.effect_pct, F.signedpct), cls: r => signClass(r.effect_pct, r.good) },
+  ]));
+  dash.draw('plan-effect-rows', el => tableRows(el, 'effects', 'metric', [
+    { f: r => r.label }, { num: true, f: r => nz(r.actual, v => effF(v, r.unit)) }, { num: true, f: r => nz(r.plan, v => effF(v, r.unit)) },
+    { num: true, f: r => nz(r.plan_pct, F.signedpct), cls: r => signClass(r.plan_pct, r.good) },
+  ]));
+  dash.draw('plan-rows', el => tableRows(el, 'plan', 'n', [
+    { f: r => r.area }, { f: r => r.change }, { f: r => r.label }, { num: true, f: r => nz(r.actual, v => effF(v, r.unit)) },
+    { num: true, f: r => nz(r.plan, v => effF(v, r.unit)), cls: r => signClass(Number(r.plan) - Number(r.actual), r.good) }, { f: r => r.note || '' },
+  ]));
+  dash.draw('model-rows', el => tableRows(el, 'forecast_models', 'model', [
+    { f: r => r.model }, { num: true, f: r => F.pct(+r.mape) }, { num: true, f: r => F.pct(+r.mape_last) }, { f: r => +r.chosen ? 'Yes' : '' },
+  ]));
+  dash.draw('live-rows', el => tableRows(el, 'qr_live_items', 'item', [
+    { f: r => r.name }, { num: true, f: r => F.int(+r.qty) }, { num: true, f: r => F.money2(+r.revenue) },
+  ]));
+  dash.draw('menu-rows', el => tableRows(el, 'menu', 'item', [
+    { f: r => r.name }, { f: r => r.group }, { f: r => pill(r.class_before) }, { f: r => pill(r.class_after) },
+    { num: true, f: r => F.money2(+r.price_after) }, { num: true, f: r => nz(r.food_cost_pct, F.pct) }, { num: true, f: r => F.money2(+r.cm_unit) },
+    { num: true, f: r => F.one(+r.units_wk_before) }, { num: true, f: r => F.one(+r.units_wk_after) },
+    { num: true, f: r => F.money(+r.cm_wk_before) }, { num: true, f: r => F.money(+r.cm_wk_after) },
+  ]));
+  dash.draw('par-rows', el => tableRows(el, 'item_forecast', 'item', [
+    { f: r => r.name }, { num: true, f: r => F.int(+r.forecast_weekly_units) },
+    ...['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(k => ({ num: true, f: r => F.int(+r['par_' + k]) })),
+  ]));
+  dash.draw('labour-rows', el => tableRows(el, 'labour', 'key', [
+    { f: r => r.weekday }, { f: r => r.plan }, { num: true, f: r => F.one(+r.hours) }, { num: true, f: r => F.money(+r.cost) }, { num: true, f: r => F.money(+r.sales) }, { num: true, f: r => F.pct(+r.labour_pct) },
+  ], r => r.plan !== 'before'));
+  const sel = id => document.getElementById(id);
+  ['rota-day', 'rota-plan'].forEach(id => { const s = sel(id); if (s) s.addEventListener('change', () => dash.draw('rota-rows')); });
+  dash.draw('rota-rows', el => { const day = sel('rota-day')?.value || 'Fri', plan = sel('rota-plan')?.value || 'proposed';
+    tableRows(el, 'rota', 'key', [
+      { f: r => r.role }, { f: r => r.shift }, { f: r => hhmm(+r.start) }, { f: r => hhmm(+r.end) }, { num: true, f: r => F.int(+r.headcount) }, { num: true, f: r => F.one(+r.hours) }, { num: true, f: r => F.money(+r.cost) },
+    ], r => r.weekday === day && r.plan === plan); });
+  dash.draw('supplier-rows', el => tableRows(el, 'supplier_summary', 'ingredient', [
+    { f: r => r.name }, { f: r => r.unit }, { f: r => r.current_supplier }, { num: true, f: r => F.money(+r.current_spend) }, { f: r => r.alt_supplier }, { num: true, f: r => F.money(+r.alt_spend) },
+    { num: true, f: r => F.money(+r.saving_switch), cls: r => signClass(r.saving_switch, 'up') }, { num: true, f: r => F.signedpct(+r.saving_switch_pct) }, { num: true, f: r => F.signedpct(+r.price_change_pct), cls: r => signClass(r.price_change_pct, 'down') }, { f: r => r.recommendation },
+  ]));
+  dash.draw('waste-rows', el => tableRows(el, 'waste_items', 'key', [
+    { f: r => r.name }, { f: r => r.kind }, { num: true, f: r => F.one(+r.units_wk_before) }, { num: true, f: r => F.one(+r.units_wk_after) }, { num: true, f: r => F.money(+r.cost_wk_before) }, { num: true, f: r => F.money(+r.cost_wk_after) },
+    { num: true, f: r => nz(r.change_pct, F.signedpct), cls: r => signClass(r.change_pct, 'down') }, { num: true, f: r => F.money(+r.cost_year) },
+  ]));
+
+  // ---- menu engineering scatter
+  ['menu-group', 'menu-period'].forEach(id => { const s = sel(id); if (s) s.addEventListener('change', () => dash.draw('menu-scatter')); });
+  dash.draw('menu-scatter', el => {
+    const d = dash.data('menu'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const grp = sel('menu-group')?.value || 'Starters', per = sel('menu-period')?.value || 'before';
+    const rows = d.data.filter(r => r.group === grp && r['units_wk_' + per] > 0).map(r => ({ ...r, pop: +r['pop_share_' + per], cm: +r['cm_unit_' + per], units: +r['units_wk_' + per], cls: r['class_' + per] }));
+    const H = 340, top = 16, bottom = 36; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    if (!rows.length) return;
+    const thr = +rows[0]['pop_threshold_' + per], avg = +rows[0]['avg_cm_' + per];
+    const y = d3.scaleLinear(d3.extent(rows.map(r => r.cm).concat(avg)), [H - bottom, top]).nice();
+    const yF = (y.domain()[1] - y.domain()[0]) < 8 ? F.money2 : F.money;
+    const left = measureLeft(svg, y, yF), right = w - 16;
+    const x = d3.scaleLinear([0, d3.max(rows.map(r => r.pop).concat(thr)) * 1.15], [left, right]).nice();
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, yF);
+    svg.append('g').selectAll('text').data(x.ticks(6)).join('text').attr('x', t => x(t)).attr('y', H - 14).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 'var(--cds-font-size-caption)').text(t => t + '%');
+    xText(svg, (left + right) / 2, H - 1, 'Share of the section\'s orders');
+    svg.append('line').attr('x1', x(thr)).attr('x2', x(thr)).attr('y1', top).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+    svg.append('line').attr('x1', left).attr('x2', right).attr('y1', y(avg)).attr('y2', y(avg)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+    xText(svg, x(thr) + 4, H - bottom - 4, 'popularity threshold', 'start'); xText(svg, right, y(avg) - 4, 'average margin', 'end');
+    const rs = d3.scaleSqrt([0, d3.max(rows, r => r.units)], [4, 18]);
+    const g = svg.append('g');
+    g.selectAll('circle').data(rows).join('circle').attr('cx', r => x(r.pop)).attr('cy', r => y(r.cm)).attr('r', r => rs(r.units)).attr('fill', r => CLASS_COLOR[r.cls] || MUTED).attr('fill-opacity', 0.85).attr('stroke', 'var(--color-panel)').attr('stroke-width', 2)
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, el); tip.show(px, py, [key(r.name), line('Class', r.cls, CLASS_COLOR[r.cls]), line('Orders / wk', F.one(r.units)), line('Share of group', F.pct(r.pop)), line('Margin / plate', F.money2(r.cm)), line('Food cost', F.pct(+r.food_cost_pct))]); }).on('pointerleave', tip.hide);
+    const placed = [];
+    rows.slice().sort((a, b) => b.units - a.units).forEach(r => {
+      let lx = x(r.pop) + rs(r.units) + 4, ly = y(r.cm) + 4, anchor = 'start';
+      if (lx + r.name.length * 6 > right) { lx = x(r.pop) - rs(r.units) - 4; anchor = 'end'; }
+      while (placed.some(p => Math.abs(p[1] - ly) < 12 && Math.abs(p[0] - lx) < 90)) ly += 12;
+      placed.push([lx, ly]);
+      svg.append('text').attr('x', lx).attr('y', ly).attr('text-anchor', anchor).attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(r.name);
+    });
+  });
+
+  // ---- daily covers + forecast
+  dash.draw('daily-chart', el => {
+    const d = dash.data('daily'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const all = d.data.map(r => ({ ...r, dt: D(r.day), covers: r.covers === null ? null : +r.covers, forecast: r.forecast === null ? null : +r.forecast, lo: r.lo === null ? null : +r.lo, hi: r.hi === null ? null : +r.hi, closed: +r.closed }));
+    const lastActual = all.filter(r => r.kind === 'actual').at(-1).dt;
+    const from = d3.utcDay.offset(lastActual, -16 * 7 + 1);
+    const rows = all.filter(r => r.dt >= from);
+    const H = 280, top = 14, bottom = 28; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const y = d3.scaleLinear([0, d3.max(rows, r => Math.max(r.covers || 0, r.hi || 0)) * 1.05], [H - bottom, top]).nice();
+    const left = measureLeft(svg, y, F.int), right = w - 8;
+    const x = d3.scaleUtc(d3.extent(rows, r => r.dt), [left, right]);
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, F.int);
+    const fut = rows.filter(r => r.kind === 'forecast');
+    svg.append('path').datum(fut).attr('fill', C[1]).attr('fill-opacity', 0.15).attr('d', d3.area().x(r => x(r.dt)).y0(r => y(r.lo)).y1(r => y(r.hi)));
+    svg.append('path').datum(rows.filter(r => r.kind === 'actual')).attr('fill', 'none').attr('stroke', C[0]).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round')
+      .attr('d', d3.line().defined(r => !r.closed).x(r => x(r.dt)).y(r => y(r.covers)));
+    svg.append('path').datum(rows.filter(r => r.kind === 'actual' && r.forecast !== null)).attr('fill', 'none').attr('stroke', C[1]).attr('stroke-width', 2).attr('stroke-dasharray', '5 4').attr('d', d3.line().x(r => x(r.dt)).y(r => y(r.forecast)));
+    svg.append('path').datum(fut).attr('fill', 'none').attr('stroke', C[1]).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x(r => x(r.dt)).y(r => y(r.forecast)));
+    refLine(svg, x(lastActual), top, H - bottom, 'Today');
+    d3.utcMonday.every(2).range(from, rows.at(-1).dt).forEach(t => xText(svg, x(t), H - 8, dateF(t)));
+    const cross = svg.append('line').attr('y1', top).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
+    const dot = svg.append('circle').attr('r', 4).attr('fill', C[0]).attr('opacity', 0);
+    const bis = d3.bisector(r => r.dt).center;
+    svg.append('rect').attr('x', left).attr('width', right - left).attr('y', top).attr('height', H - bottom - top).attr('fill', 'transparent')
+      .on('pointermove', ev => { const [px, py] = d3.pointer(ev, el); const r = rows[bis(rows, x.invert(d3.pointer(ev)[0]))]; if (!r) return;
+        cross.attr('x1', x(r.dt)).attr('x2', x(r.dt)).attr('opacity', 1);
+        const html = [key(`${r.weekday} ${dateF(r.dt)}`)];
+        if (r.kind === 'actual') { dot.attr('cx', x(r.dt)).attr('cy', y(r.covers)).attr('opacity', 1); html.push(line('Covers', r.closed ? 'closed' : F.int(r.covers), C[0])); if (r.forecast !== null) html.push(line('Holdout forecast', F.int(r.forecast), C[1])); if (r.median_ticket !== null) html.push(line('Median ticket', F.min(+r.median_ticket))); }
+        else { dot.attr('cx', x(r.dt)).attr('cy', y(r.forecast)).attr('opacity', 1).attr('fill', C[1]); html.push(line('Forecast', F.int(r.forecast), C[1]), line('80% range', `${F.int(r.lo)} – ${F.int(r.hi)}`)); }
+        tip.show(px, py, html); })
+      .on('pointerleave', () => { tip.hide(); cross.attr('opacity', 0); dot.attr('opacity', 0); });
+  });
+
+  // ---- heatmaps as HTML grids
+  function heat(el, id, valueOf, colorOf, textOf, tipOf) {
+    const d = dash.data(id); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = d.data; const hours = [...new Set(rows.map(r => +r.hour))].sort((a, b) => a - b); const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    el.style.gridTemplateColumns = `2.6rem repeat(${hours.length}, minmax(0, 1fr))`;
+    const frag = document.createDocumentFragment(); const tip = tipIn(el); el.style.position = 'relative';
+    frag.append(Object.assign(document.createElement('div'), { className: 'mo-hh' }));
+    hours.forEach(h => { const c = document.createElement('div'); c.className = 'mo-hh'; c.textContent = h; frag.append(c); });
+    const byKey = new Map(rows.map(r => [r.weekday + '|' + r.hour, r]));
+    days.forEach(day => { const l = document.createElement('div'); l.className = 'mo-hl'; l.textContent = day; frag.append(l);
+      hours.forEach(h => { const c = document.createElement('div'); c.className = 'mo-hc'; const r = byKey.get(day + '|' + h);
+        if (r) { const v = valueOf(r); c.style.background = colorOf(v, r); c.textContent = textOf(v, r); c.addEventListener('pointermove', ev => { const b = el.getBoundingClientRect(); tip.show(ev.clientX - b.left, ev.clientY - b.top, tipOf(r)); }); c.addEventListener('pointerleave', tip.hide); }
+        else c.style.background = 'transparent';
+        frag.append(c); }); });
+    el.replaceChildren(frag, tip && el.querySelector('.mo-tip') || document.createTextNode(''));
+    el.append(...el.querySelectorAll('.mo-tip'));
+  }
+  dash.draw('hour-heat', el => { const d = dash.data('hourly'); const max = d.status === 'ok' ? d3.max(d.data, r => +r.covers) : 1;
+    heat(el, 'hourly', r => +r.covers, v => mix(C[0], 8 + 72 * v / max), v => Math.round(v), r => [key(`${r.weekday} ${r.hour}:00`), line('Covers seated', F.one(+r.covers)), line('Parties', F.one(+r.parties)), line('Hot plates', F.one(+r.plates)), line('Median ticket', F.min(+r.median_ticket_after))]); });
+  const gapColor = v => v < 0 ? mix('var(--color-bad)', 25 + 25 * Math.min(2, -v)) : v > 0 ? mix(C[0], 12 + 18 * Math.min(3, v)) : 'transparent';
+  const gapText = v => v > 0 ? '+' + v : v === 0 ? '0' : String(v);
+  dash.draw('rota-heat-servers', el => heat(el, 'hourly', r => +r.server_gap, gapColor, gapText, r => [key(`${r.weekday} ${r.hour}:00`), line('Scheduled', r.servers_scheduled), line('Needed', r.servers_needed), line('Parties arriving', F.one(+r.parties))]));
+  dash.draw('rota-heat-cooks', el => heat(el, 'hourly', r => +r.cook_gap, gapColor, gapText, r => [key(`${r.weekday} ${r.hour}:00`), line('Scheduled', r.cooks_scheduled), line('Needed', r.cooks_needed), line('Hot plates / hour', F.one(+r.plates)), line('Median ticket', F.min(+r.median_ticket_after))]));
+
+  // ---- supplier price index lines
+  const PRICE_LINES = [['beef', 'Ground beef'], ['steak', 'Ribeye / strip'], ['ribs', 'Pork back ribs'], ['greens', 'Romaine & greens']];
+  dash.draw('price-lines', el => {
+    const d = dash.data('supplier_quotes'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const series = PRICE_LINES.map(([ing, name], i) => { const pts = d.data.filter(r => r.ingredient === ing && +r.is_current === 1).sort((a, b) => a.week_start < b.week_start ? -1 : 1).map(r => ({ dt: D(r.week_start), price: +r.price, unit: r.unit })); const base = pts[0].price; return { name, color: C[i], pts: pts.map(p => ({ ...p, idx: 100 * p.price / base })) }; });
+    const H = 280, top = 14, bottom = 28; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const allv = series.flatMap(s => s.pts.map(p => p.idx));
+    const y = d3.scaleLinear([Math.min(90, d3.min(allv)), d3.max(allv) * 1.02], [H - bottom, top]).nice();
+    const left = measureLeft(svg, y, F.int), right = w - 110;
+    const x = d3.scaleUtc(d3.extent(series[0].pts, p => p.dt), [left, right]);
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, F.int);
+    svg.append('line').attr('x1', left).attr('x2', right).attr('y1', y(100)).attr('y2', y(100)).attr('stroke', 'var(--cds-chart-reference)');
+    d3.utcMonth.every(2).range(...d3.extent(series[0].pts, p => p.dt)).forEach(t => xText(svg, x(t), H - 8, d3.utcFormat('%b')(t)));
+    const ends = [];
+    series.forEach(s => { svg.append('path').datum(s.pts).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('d', d3.line().x(p => x(p.dt)).y(p => y(p.idx)));
+      const last = s.pts.at(-1); ends.push({ s, yy: y(last.idx), txt: `${s.name} ${Math.round(last.idx)}` }); });
+    ends.sort((a, b) => a.yy - b.yy); for (let i = 1; i < ends.length; i++) if (ends[i].yy - ends[i - 1].yy < 13) ends[i].yy = ends[i - 1].yy + 13;
+    ends.forEach(e => svg.append('text').attr('x', right + 6).attr('y', e.yy + 4).attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(e.txt));
+    const cross = svg.append('line').attr('y1', top).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
+    const bis = d3.bisector(p => p.dt).center;
+    svg.append('rect').attr('x', left).attr('width', right - left).attr('y', top).attr('height', H - bottom - top).attr('fill', 'transparent')
+      .on('pointermove', ev => { const [px, py] = d3.pointer(ev, el); const i = bis(series[0].pts, x.invert(d3.pointer(ev)[0])); const p0 = series[0].pts[i]; cross.attr('x1', x(p0.dt)).attr('x2', x(p0.dt)).attr('opacity', 1);
+        tip.show(px, py, [key(`Week of ${dateF(p0.dt)}`), ...series.map(s => { const p = s.pts[i]; return line(s.name, `${F.money2(p.price)} / ${p.unit} (index ${Math.round(p.idx)})`, s.color); })]); })
+      .on('pointerleave', () => { tip.hide(); cross.attr('opacity', 0); });
+  });
+
+  // ---- reviews: monthly rating
+  dash.draw('rating-line', el => {
+    const d = dash.data('reviews_monthly'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = d.data.map(r => ({ ...r, dt: D(r.month_start), v: +r.avg_rating })).sort((a, b) => a.dt - b.dt);
+    const H = 240, top = 14, bottom = 28; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const y = d3.scaleLinear([Math.floor(d3.min(rows, r => r.v) * 2) / 2 - 0.25, Math.min(5, d3.max(rows, r => r.v) + 0.25)], [H - bottom, top]);
+    const left = measureLeft(svg, y, F.one), right = w - 30;
+    const x = d3.scalePoint(rows.map(r => r.month), [left, right]).padding(0.3);
+    grid(svg, y, left, right, 4); yAxis(svg, y, left, 0, F.one, 4);
+    const ci = rows.find(r => r.month === CHANGE.slice(0, 7)); if (ci) refLine(svg, x(ci.month) - x.step() / 2, top, H - bottom, 'Changes live');
+    svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', C[0]).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x(r => x(r.month)).y(r => y(r.v)));
+    svg.append('g').selectAll('circle').data(rows).join('circle').attr('cx', r => x(r.month)).attr('cy', r => y(r.v)).attr('r', 4).attr('fill', C[0]).attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
+    rows.forEach((r, i) => { if (i % 2 === 0) xText(svg, x(r.month), H - 8, d3.utcFormat('%b')(r.dt)); });
+    [rows[0], rows.at(-1)].forEach(r => xText(svg, x(r.month), y(r.v) - 10, F.star(r.v)));
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.month) - x.step() / 2).attr('width', x.step()).attr('y', top).attr('height', H - bottom - top).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, el); tip.show(px, py, [key(monthF(r.dt)), line('Average rating', F.star(r.v), C[0]), line('Reviews', F.int(+r.n)), line('5-star share', F.pct(+r.pct_5)), line('1–2 star share', F.pct(+r.pct_1_2))]); }).on('pointerleave', tip.hide);
+  });
+  dash.draw('ticket-rating-bars', el => {
+    const d = dash.data('ticket_vs_rating'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = d.data.slice().sort((a, b) => +a.lo - +b.lo);
+    const H = 240, top = 18, bottom = 40; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const y = d3.scaleLinear([0, 5], [H - bottom, top]);
+    const left = measureLeft(svg, y, F.one), right = w - 8;
+    const x = d3.scaleBand(rows.map(r => r.bucket), [left, right]).paddingInner(0.3).paddingOuter(0.1);
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, F.one);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.bucket)).attr('width', x.bandwidth()).attr('y', r => y(+r.avg_rating)).attr('height', r => y(0) - y(+r.avg_rating)).attr('rx', 4)
+      .attr('fill', r => +r.lo >= 30 ? 'var(--cds-chart-status-critical)' : C[0])
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, el); tip.show(px, py, [key(`Ticket ${r.bucket} min`), line('Average rating', F.star(+r.avg_rating)), line('Reviews', F.int(+r.n)), line('1–2 stars', F.pct(+r.pct_1_2))]); }).on('pointerleave', tip.hide);
+    rows.forEach(r => { xText(svg, x(r.bucket) + x.bandwidth() / 2, y(+r.avg_rating) - 6, F.star(+r.avg_rating)); xText(svg, x(r.bucket) + x.bandwidth() / 2, H - 22, r.bucket); });
+    xText(svg, (left + right) / 2, H - 6, 'Minutes from order fired to served');
+  });
+  dash.draw('theme-dumbbell', el => {
+    const d = dash.data('review_themes'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const themes = [...new Set(d.data.map(r => r.theme))];
+    const rows = themes.map(t => ({ theme: t, b: d.data.find(r => r.theme === t && r.period === 'before'), a: d.data.find(r => r.theme === t && r.period === 'after') })).filter(r => r.a && r.b).sort((p, q) => +q.a.net - +p.a.net);
+    const H = 24 + rows.length * 32 + 20, top = 10, bottom = 24; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const labelW = 92, left = labelW, right = w - 36;
+    const x = d3.scaleLinear([-100, 100], [left, right]);
+    const y = d3.scalePoint(rows.map(r => r.theme), [top + 10, H - bottom - 10]);
+    svg.append('g').selectAll('line').data([-100, -50, 0, 50, 100]).join('line').attr('x1', t => x(t)).attr('x2', t => x(t)).attr('y1', top).attr('y2', H - bottom).attr('stroke', t => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    [-100, -50, 0, 50, 100].forEach(t => xText(svg, x(t), H - 6, d3.format('+d')(t)));
+    rows.forEach(r => { const yy = y(r.theme), b = +r.b.net, a = +r.a.net;
+      svg.append('text').attr('x', left - 10).attr('y', yy + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(r.theme);
+      svg.append('line').attr('x1', x(b)).attr('x2', x(a)).attr('y1', yy).attr('y2', yy).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-width', 2);
+      svg.append('circle').attr('cx', x(b)).attr('cy', yy).attr('r', 6).attr('fill', MUTED).attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
+      svg.append('circle').attr('cx', x(a)).attr('cy', yy).attr('r', 6).attr('fill', C[0]).attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
+      svg.append('text').attr('x', x(Math.max(a, b)) + 10).attr('y', yy + 4).attr('fill', 'var(--color-fg)').attr('font-size', 'var(--cds-font-size-caption)').text(d3.format('+d')(a));
+      svg.append('rect').attr('x', left).attr('width', right - left).attr('y', yy - 14).attr('height', 28).attr('fill', 'transparent')
+        .on('pointermove', ev => { const [px, py] = d3.pointer(ev, el); tip.show(px, py, [key(r.theme), line('Before', `${d3.format('+d')(b)} net, ${r.b.mentions} mentions`, MUTED), line('After', `${d3.format('+d')(a)} net, ${r.a.mentions} mentions`, C[0])]); }).on('pointerleave', tip.hide); });
+  });
+  dash.draw('quote-list', el => {
+    const d = dash.data('review_quotes'); wait(el, d.status); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const frag = document.createDocumentFragment();
+    d.data.slice().sort((a, b) => a.date < b.date ? -1 : 1).forEach(r => { const li = document.createElement('li'); li.style.borderLeftColor = +r.rating >= 4 ? C[0] : +r.rating <= 2 ? 'var(--cds-chart-status-critical)' : 'var(--color-border-line)';
+      const m = document.createElement('span'); m.className = 'mo-meta'; m.textContent = `${'★'.repeat(+r.rating)}${'☆'.repeat(5 - +r.rating)} · ${r.platform} · ${dateF(D(r.date))} · ${r.period === 'after' ? 'after the changes' : 'before the changes'}`;
+      li.append(m, document.createTextNode(r.text)); frag.append(li); });
+    el.replaceChildren(frag);
+  });
+
+  // ---- waste
+  dash.draw('waste-weekly', el => {
+    const d = dash.data('waste_weekly'); wait(el, d.status); if (d.status === 'error') return fail(el); if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = d.data.map(r => ({ ...r, dt: D(r.week_start), over: +r.over_prep_cost, plate: +r.plate_cost })).sort((a, b) => a.dt - b.dt);
+    const H = 260, top = 14, bottom = 28; const { svg, w } = frame(el, H); const tip = tipIn(el);
+    const y = d3.scaleLinear([0, d3.max(rows, r => r.over + r.plate) * 1.05], [H - bottom, top]).nice();
+    const left = measureLeft(svg, y, F.money), right = w - 8;
+    const x = d3.scaleBand(rows.map(r => r.week_start), [left, right]).paddingInner(0.25);
+    grid(svg, y, left, right); yAxis(svg, y, left, 0, F.money);
+    const bw = x.bandwidth();
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.week_start)).attr('width', bw).attr('y', r => y(r.over)).attr('height', r => y(0) - y(r.over)).attr('fill', C[0]);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.week_start)).attr('width', bw).attr('y', r => y(r.over + r.plate)).attr('height', r => Math.max(0, y(r.over) - y(r.over + r.plate) - 2)).attr('fill', C[1]).attr('rx', Math.min(3, bw / 2));
+    refLine(svg, x(CHANGE) - (x.step() - bw) / 2, top, H - bottom, 'Changes live');
+    d3.utcMonth.range(rows[0].dt, rows.at(-1).dt).forEach(mth => { const r = rows.find(q => q.dt >= mth); if (r) xText(svg, x(r.week_start), H - 8, d3.utcFormat('%b')(mth), 'start'); });
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.week_start) - (x.step() - bw) / 2).attr('width', x.step()).attr('y', top).attr('height', H - bottom - top).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => { const [px, py] = d3.pointer(ev, el); tip.show(px, py, [key(`Week of ${dateF(r.dt)}`), line('Over-prep', `${F.money(r.over)} (${F.int(+r.over_prep_units)} portions)`, C[0]), line('Plate waste', `${F.money(r.plate)} (${F.int(+r.plate_units)} portions)`, C[1]), line('Total', F.money(r.over + r.plate))]); }).on('pointerleave', tip.hide);
+  });
+})();
+</script>

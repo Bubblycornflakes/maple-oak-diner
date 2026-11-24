@@ -1,0 +1,808 @@
+<title>Maple &amp; Oak Menu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IBM+Plex+Mono:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Layout: guests get one narrow phone column with a rising order tray; the owner console widens to a two-column workspace with tabs. */
+:root {
+  --bg: #fbf8f3; --paper: #ffffff; --ink: #1f1a17; --muted: #6e645c; --line: #e7dfd4;
+  --ketchup: #b3261e; --ketchup-ink: #ffffff; --mustard: #e0a526; --tag: #f3ebdf;
+  --ok: #1f7a3d; --warn: #9a6400; --bad: #b3261e;
+  --display: "Alfa Slab One", "Rockwell", Georgia, serif;
+  --body: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #17130f; --paper: #221c17; --ink: #f4ece2; --muted: #b3a697; --line: #3a3029;
+  --ketchup: #e0574c; --ketchup-ink: #1a0f0d; --mustard: #f0bd4d; --tag: #2f2620; --ok: #6cc08a; --warn: #f0bd4d; --bad: #ef7a70; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #17130f; --paper: #221c17; --ink: #f4ece2; --muted: #b3a697; --line: #3a3029;
+  --ketchup: #e0574c; --ketchup-ink: #1a0f0d; --mustard: #f0bd4d; --tag: #2f2620; --ok: #6cc08a; --warn: #f0bd4d; --bad: #ef7a70; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 34rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 7rem; }
+body.owner .wrap { max-width: 72rem; padding-bottom: 3rem; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px solid var(--mustard); outline-offset: 2px; }
+header.top { padding-block: 1.6rem 0.8rem; display: grid; gap: 0.25rem; border-bottom: 3px double var(--line); margin-bottom: 0.4rem; }
+body.owner header.top { border-bottom: 0; padding-bottom: 0.2rem; }
+.eyebrow { margin: 0; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.brand { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1; margin: 0; color: var(--ketchup); text-wrap: balance; letter-spacing: 0.005em; }
+body.owner .brand { font-size: 1.6rem; }
+.sub { color: var(--muted); font-size: 0.85rem; margin: 0; }
+.tablebar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.6rem; font-size: 0.9rem; }
+select, input[type="text"], input[type="number"], textarea { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 0.3rem 0.5rem; }
+.chip { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--mustard); color: #1f1a17; font-weight: 600; border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 0.85rem; }
+.key { margin: 1.2rem 0 0; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); }
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.pill { border: 1px solid var(--line); background: var(--paper); border-radius: 999px; padding: 0.2rem 0.75rem; cursor: pointer; font-size: 0.82rem; }
+.pill[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+nav.rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); display: flex; gap: 0.4rem; overflow-x: auto; padding-block: 0.6rem; border-bottom: 1px solid var(--line); scrollbar-width: none; }
+nav.rail a { flex: none; text-decoration: none; color: var(--muted); font-weight: 500; padding: 0.3rem 0.8rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.9rem; }
+nav.rail a.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+section.cat { padding-top: 1.2rem; scroll-margin-top: 3.5rem; }
+section.cat h2 { font-family: var(--display); font-weight: 400; font-size: 1.45rem; margin: 0 0 0.15rem; display: flex; align-items: center; gap: 0.6rem; }
+section.cat h2::after { content: ""; flex: 1; height: 3px; background: var(--mustard); border-radius: 2px; }
+section.cat > p { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.85rem; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 1rem; padding-block: 0.85rem; border-bottom: 1px solid var(--line); }
+.item .flag { grid-column: 1 / -1; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ketchup); }
+.ihead { grid-column: 1 / -1; margin: 0; font-size: 1.02rem; font-weight: 600; display: flex; align-items: baseline; gap: 0.5rem; }
+.iname { min-width: 0; }
+.lead { flex: 1 1 1.5rem; min-width: 1.5rem; border-bottom: 2px dotted var(--line); transform: translateY(-0.3rem); }
+.ihead .price { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.code { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); border: 1px solid currentColor; border-radius: 999px; padding: 0 0.32rem; text-decoration: none; vertical-align: 0.12em; white-space: nowrap; }
+.code.hot { color: var(--bad); }
+.item.out .price { text-decoration: line-through; color: var(--muted); }
+.item p { margin: 0; color: var(--muted); font-size: 0.88rem; grid-column: 1; max-width: 32rem; }
+.tag { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: var(--tag); color: var(--muted); border-radius: 4px; padding: 0 0.35rem; }
+.tag.hot { color: var(--bad); }
+.qty { grid-column: 2; justify-self: end; align-self: start; display: flex; align-items: center; gap: 0.4rem; }
+.item > .qty:only-of-type { grid-row: auto; }
+.add, .step { border: 0; cursor: pointer; border-radius: 999px; font-weight: 600; }
+.add { background: transparent; color: var(--ketchup); border: 1.5px solid var(--ketchup); padding: 0.22rem 0.85rem; font-size: 0.85rem; }
+.add:hover { background: var(--ketchup); color: var(--ketchup-ink); }
+.add:disabled { border-color: var(--line); color: var(--muted); background: transparent; cursor: default; }
+.step { width: 1.9rem; height: 1.9rem; background: var(--tag); line-height: 1; font-size: 1.05rem; }
+.qty output { min-width: 1.2rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
+.tray { position: fixed; left: 0; right: 0; bottom: 0; z-index: 8; background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgb(0 0 0 / 0.12); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.tray-in { max-width: 34rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0.7rem; max-height: 78vh; overflow-y: auto; box-sizing: border-box; }
+.tray-bar { display: flex; align-items: center; gap: 0.8rem; width: 100%; border: 0; background: var(--ketchup); color: var(--ketchup-ink); border-radius: 12px; padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; }
+.tray-bar .n { border: 1.5px solid currentColor; border-radius: 999px; padding: 0 0.5rem; }
+.tray-bar .t { margin-left: auto; font-variant-numeric: tabular-nums; }
+.sheet { display: grid; gap: 0.6rem; padding-bottom: 0.7rem; }
+.sheet h2 { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: 0.3rem 0 0; }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.6rem; align-items: center; font-size: 0.92rem; }
+.line .lp { font-variant-numeric: tabular-nums; min-width: 4rem; text-align: right; }
+.sum { display: grid; grid-template-columns: 1fr auto; gap: 0.15rem 1rem; font-variant-numeric: tabular-nums; border-top: 1px solid var(--line); padding-top: 0.5rem; font-size: 0.9rem; }
+.sum .tot { font-weight: 600; font-size: 1.05rem; }
+.tips { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+textarea { width: 100%; box-sizing: border-box; min-height: 3.2rem; resize: vertical; }
+textarea::placeholder, input::placeholder { color: var(--muted); opacity: 1; }
+.msg { font-size: 0.88rem; margin: 0; }
+.msg.err { color: var(--bad); }
+.done { text-align: center; padding-block: 1rem; display: grid; gap: 0.4rem; }
+.done .big { font-family: var(--display); font-size: 1.6rem; color: var(--ketchup); }
+.ghost { border: 1px solid var(--line); background: transparent; border-radius: 10px; padding: 0.5rem 1rem; cursor: pointer; }
+.ghost:disabled { opacity: 0.6; cursor: default; }
+.solid { border: 0; background: var(--ink); color: var(--bg); border-radius: 10px; padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; }
+.tab { display: grid; gap: 0.4rem; border-top: 1px solid var(--line); padding-top: 0.6rem; font-size: 0.88rem; }
+.tab .rd { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.6rem; }
+.row2 { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.row2 > * { flex: 1 1 8rem; }
+.banner { background: var(--tag); border-radius: 8px; padding: 0.5rem 0.7rem; font-size: 0.85rem; margin: 0; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); z-index: 9; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 0.6rem 0.8rem; display: flex; gap: 0.8rem; align-items: center; font-size: 0.9rem; max-width: calc(100% - 32px); box-shadow: 0 6px 20px rgb(0 0 0 / 0.2); }
+.toast button { border: 0; background: var(--mustard); color: #1f1a17; border-radius: 8px; padding: 0.3rem 0.7rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.st { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; border-radius: 4px; padding: 0.05rem 0.45rem; border: 0; white-space: nowrap; }
+.st.new { background: var(--mustard); color: #1f1a17; } .st.cooking { background: var(--ketchup); color: var(--ketchup-ink); } .st.served { background: var(--tag); color: var(--muted); }
+/* ---------- owner console ---------- */
+.otabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; background: var(--bg); display: flex; flex-wrap: wrap; gap: 0.3rem; border-bottom: 1px solid var(--line); padding-block: 0.5rem 0.4rem; margin-top: 0.4rem; }
+.otab { border: 0; background: none; border-radius: 8px; padding: 0.4rem 0.8rem; cursor: pointer; color: var(--muted); font-weight: 500; }
+.otab[aria-selected="true"] { color: var(--ink); background: var(--paper); box-shadow: inset 0 -2px 0 var(--ketchup); }
+.otab .count { display: inline-block; min-width: 1.2rem; margin-left: 0.3rem; border-radius: 999px; background: var(--ketchup); color: var(--ketchup-ink); font-size: 0.75rem; text-align: center; padding: 0 0.3rem; }
+.opane { padding-top: 1rem; display: grid; gap: 1rem; }
+.opane h2 { font-family: var(--display); font-weight: 400; font-size: 1.3rem; margin: 0; }
+.opane h2.ph { font-family: var(--body); font-weight: 600; margin: 0 0 0.4rem; font-size: 1rem; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; align-items: start; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; min-width: 0; display: grid; gap: 0.5rem; align-content: start; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: 0.6rem; }
+.stat { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.8rem; display: grid; gap: 0.1rem; }
+.stat .l { font-size: 0.78rem; color: var(--muted); }
+.stat .v { font-family: var(--mono); font-weight: 600; font-size: 1.55rem; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.stat .d { font-size: 0.78rem; color: var(--muted); }
+.alerts { display: grid; gap: 0.5rem; }
+.alert { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; border: 1px solid var(--mustard); background: color-mix(in srgb, var(--mustard) 14%, var(--paper)); border-radius: 8px; padding: 0.55rem 0.7rem; font-weight: 500; }
+.alert.bill { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); } .alert.help { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, var(--paper)); }
+.tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.6rem, 1fr)); gap: 0.4rem; }
+.tbl { border: 1px dashed var(--line); border-radius: 10px; padding: 0.45rem 0.3rem; text-align: center; font-size: 0.74rem; color: var(--muted); display: grid; gap: 0.05rem; }
+.tbl b { font-family: var(--display); font-weight: 400; font-size: 1.15rem; color: var(--ink); }
+.tbl.cooking, .tbl.eating, .tbl.bill, .tbl.help { border-style: solid; color: var(--ink); }
+.tbl.cooking { border-color: var(--ketchup); background: color-mix(in srgb, var(--ketchup) 12%, var(--paper)); }
+.tbl.eating { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
+.tbl.bill, .tbl.help { border-color: var(--mustard); border-width: 2px; background: color-mix(in srgb, var(--mustard) 22%, var(--paper)); font-weight: 600; }
+.tickets { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.6rem; }
+.ticket { background: var(--paper); border: 1px solid var(--line); border-top: 6px solid var(--ok); border-radius: 0; padding: 0.75rem 0.8rem 1.1rem; display: grid; gap: 0.45rem; align-content: start; font-family: var(--mono); font-size: 0.9rem;
+  -webkit-mask: radial-gradient(circle at 6px 100%, transparent 5px, #000 5.5px) 0 0 / 12px 100% repeat-x; mask: radial-gradient(circle at 6px 100%, transparent 5px, #000 5.5px) 0 0 / 12px 100% repeat-x; }
+.ticket.warn { border-top-color: var(--mustard); } .ticket.late { border-top-color: var(--bad); }
+.ticket .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; border-bottom: 1px dashed var(--line); padding-bottom: 0.35rem; }
+.ticket .tno { font-family: var(--display); font-weight: 400; font-size: 1.4rem; }
+.ticket .age { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ticket.late .age { color: var(--bad); } .ticket.warn .age { color: var(--warn); }
+.ticket ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.15rem; }
+.ticket .q { display: inline-block; min-width: 1.8rem; font-weight: 600; }
+.ticket .note { background: var(--tag); padding: 0.25rem 0.4rem; border-radius: 4px; font-size: 0.82rem; }
+.ticket .bump, .ticket .st { font-family: var(--body); }
+.ticket .bump { width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.8rem; font-size: 0.8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; margin-right: 0.3rem; vertical-align: -1px; }
+.list { display: grid; gap: 0.3rem; margin: 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.list li { display: flex; justify-content: space-between; gap: 0.6rem; border-bottom: 1px dashed var(--line); padding-block: 0.2rem; }
+.list li span:last-child { font-variant-numeric: tabular-nums; }
+.soldout { display: grid; gap: 0.7rem; }
+.sogrp { display: grid; gap: 0.3rem; }
+.sohd { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.sorow { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.pill.so[aria-pressed="true"] { background: var(--bad); border-color: var(--bad); color: var(--ketchup-ink); text-decoration: line-through; }
+.ed-sec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; display: grid; gap: 0.5rem; }
+.ed-sec-hd { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.ed-sec-hd input { flex: 1 1 12rem; }
+.ed-sec-hd input:first-child { font-weight: 600; }
+.ed-item { display: grid; grid-template-columns: minmax(0, 2fr) 6rem minmax(0, 3fr) auto; gap: 0.4rem; align-items: start; border-top: 1px dashed var(--line); padding-top: 0.5rem; }
+.ed-item .tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; font-size: 0.8rem; color: var(--muted); }
+.ed-item .tags label { display: flex; gap: 0.25rem; align-items: center; }
+.ed-tools { display: flex; gap: 0.2rem; }
+.icon { border: 1px solid var(--line); background: transparent; border-radius: 6px; width: 2rem; height: 2rem; cursor: pointer; }
+@media (max-width: 640px) { .ed-item { grid-template-columns: minmax(0, 1fr) 5.5rem; } .ed-item textarea, .ed-tools { grid-column: 1 / -1; } }
+.savebar { position: sticky; bottom: 0; z-index: 6; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 0.6rem 0.8rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; justify-content: space-between; box-shadow: 0 -4px 16px rgb(0 0 0 / 0.08); }
+.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 0.7rem; }
+.form label { display: grid; gap: 0.25rem; font-size: 0.85rem; color: var(--muted); }
+.form label > span { color: var(--ink); font-weight: 500; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr)); gap: 0.8rem; }
+.card { background: #ffffff; color: #1f1a17; border: 2px solid #1f1a17; border-radius: 10px; padding: 0.7rem; text-align: center; display: grid; gap: 0.3rem; justify-items: center; }
+.card .nm { font-family: var(--display); font-size: 1rem; color: #8f1d17; }
+.card .qr { width: 100%; max-width: 8.5rem; aspect-ratio: 1; }
+.card .qr img, .card .qr canvas { width: 100% !important; height: auto !important; }
+.card small { font-size: 0.75rem; }
+.foot { color: var(--muted); font-size: 0.78rem; margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; }
+.foot a { color: var(--muted); }
+.empty { color: var(--muted); font-size: 0.9rem; margin: 0; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow" id="console-eyebrow" hidden>Owner console · <span id="clock"></span></p>
+    <h1 class="brand" id="brand">Maple &amp; Oak</h1>
+    <p class="sub" id="tagline">American grill</p>
+  </header>
+
+  <!-- ===================== guest menu ===================== -->
+  <main id="view-menu">
+    <div class="tablebar">
+      <span class="chip" id="table-chip" hidden>Table <b id="table-num"></b></span>
+      <label id="table-pick">Your table <select id="table-select"></select></label>
+    </div>
+    <div class="filters" role="group" aria-label="Show only">
+      <button type="button" class="pill" data-filter="veg" aria-pressed="false">Vegetarian</button>
+      <button type="button" class="pill" data-filter="gf" aria-pressed="false">Gluten-free</button>
+      <button type="button" class="pill" data-filter="nohot" aria-pressed="false">Not spicy</button>
+    </div>
+    <nav class="rail" id="rail" aria-label="Menu sections"></nav>
+    <div id="menu"></div>
+    <p class="key" id="key">V vegetarian · GF gluten-free · N contains nuts · D contains dairy · Hot spicy · 21+ ID required</p>
+    <p class="sub" id="notice" style="margin-top:0.4rem"></p>
+  </main>
+
+  <!-- ===================== owner console ===================== -->
+  <section id="view-owner" hidden>
+    <p class="banner" id="owner-locked" hidden>The owner console is for the restaurant's editors. Ask the owner to give you edit access from the Share menu.</p>
+    <div id="owner-body" hidden>
+      <div class="otabs" role="tablist" aria-label="Owner console">
+        <button class="otab" type="button" role="tab" data-pane="today" aria-selected="true">Today</button>
+        <button class="otab" type="button" role="tab" data-pane="live" aria-selected="false">Live orders<span class="count" id="live-count" hidden></span></button>
+        <button class="otab" type="button" role="tab" data-pane="edit" aria-selected="false">Menu</button>
+        <button class="otab" type="button" role="tab" data-pane="settings" aria-selected="false">Settings</button>
+        <button class="otab" type="button" role="tab" data-pane="qr" aria-selected="false">QR codes</button>
+      </div>
+
+      <div class="opane" data-pane="today">
+        <div class="alerts" id="alerts"></div>
+        <div class="stats">
+          <div class="stat"><span class="l">Sales today</span><span class="v" id="s-sales">—</span><span class="d">food &amp; drink, before tax and tip</span></div>
+          <div class="stat"><span class="l">Rounds ordered</span><span class="v" id="s-rounds">—</span><span class="d" id="s-rounds-d">today</span></div>
+          <div class="stat"><span class="l">Average check</span><span class="v" id="s-check">—</span><span class="d">per closed table</span></div>
+          <div class="stat"><span class="l">Ticket time</span><span class="v" id="s-ticket">—</span><span class="d">ordered to served, median</span></div>
+          <div class="stat"><span class="l">Tables open</span><span class="v" id="s-open">—</span><span class="d" id="s-open-d">of —</span></div>
+        </div>
+        <div class="grid2">
+          <div class="panel"><h2 class="ph">Floor</h2><div class="legend"><span><i style="background:var(--paper);border:1px solid var(--line)"></i>Free</span><span><i style="background:var(--ketchup)"></i>Food on the way</span><span><i style="background:var(--ok)"></i>Eating</span><span><i style="background:var(--mustard)"></i>Needs you</span></div><div class="tables" id="floor"></div></div>
+          <div class="panel"><h2 class="ph">Best sellers today</h2><ul class="list" id="top-items"></ul><p class="empty" id="top-empty">Nothing sold yet today.</p></div>
+        </div>
+      </div>
+
+      <div class="opane" data-pane="live" hidden>
+        <div class="alerts" id="alerts-live"></div>
+        <div class="legend" id="timer-legend"></div>
+        <div class="tickets" id="tickets"></div>
+        <div class="row2" style="align-items:center"><button type="button" class="ghost" id="recall" disabled style="flex:0 0 auto">Recall last served</button><span class="sub">Tap a ticket's button to move it along. Recall brings back a ticket bumped by mistake.</span></div>
+        <div class="panel"><h2 class="ph">Sold out today</h2><p class="sub">Tap a dish to mark it sold out; guests see "Sold out" straight away. Tap again when it's back.</p><div class="soldout" id="soldout"></div></div>
+      </div>
+
+      <div class="opane" data-pane="edit" hidden>
+        <p class="sub">Change names, prices, descriptions and tags, add or remove dishes and sections, and reorder them. Guests see changes when you save.</p>
+        <div id="editor" style="display:grid;gap:0.8rem"></div>
+        <button type="button" class="ghost" id="add-section">Add a section</button>
+        <div class="savebar"><span class="sub" id="edit-state">No unsaved changes.</span><span class="row2" style="flex:0 1 auto"><button type="button" class="ghost" id="edit-undo">Discard changes</button><button type="button" class="solid" id="edit-save">Save menu</button></span></div>
+      </div>
+
+      <div class="opane" data-pane="settings" hidden>
+        <div class="panel">
+          <h2 class="ph">Your restaurant</h2>
+          <div class="form">
+            <label><span>Name</span><input type="text" id="set-name" maxlength="60"></label>
+            <label><span>Tagline</span><input type="text" id="set-tagline" maxlength="120"></label>
+            <label><span>Hours</span><input type="text" id="set-hours" maxlength="80" placeholder="Open 11 to 10, Fri &amp; Sat till 11"></label>
+            <label><span>Number of tables</span><input type="number" id="set-tables" min="1" max="200"></label>
+            <label><span>Seats</span><input type="number" id="set-seats" min="1" max="2000"></label>
+            <label><span>Sales tax %</span><input type="number" id="set-tax" min="0" max="30" step="0.01"></label>
+            <label><span>Tip choices %, comma-separated</span><input type="text" id="set-tips" placeholder="0, 18, 20, 22"></label>
+            <label><span>Default tip %</span><input type="number" id="set-tipdef" min="0" max="50"></label>
+            <label><span>Currency symbol</span><input type="text" id="set-cur" maxlength="4"></label>
+            <label><span>Brand colour</span><input type="color" id="set-accent"><small id="accent-check"></small></label>
+            <label><span>Ticket turns amber after (min)</span><input type="number" id="set-warn" min="1" max="120"></label>
+            <label><span>Ticket turns red after (min)</span><input type="number" id="set-late" min="1" max="180"></label>
+            <label><span>This menu's link, for the QR codes</span><input type="text" id="set-link" maxlength="300" placeholder="https://claude.ai/artifact/…"></label>
+          </div>
+          <label class="form" style="grid-template-columns:1fr"><span style="color:var(--ink);font-weight:500">Note under the menu</span><textarea id="set-notice" maxlength="300"></textarea></label>
+          <div class="row2" style="align-items:center"><button type="button" class="solid" id="set-save" style="flex:0 0 auto">Save settings</button><span class="sub" id="set-state"></span></div>
+        </div>
+        <div class="panel">
+          <h2 class="ph">Copy this setup to another restaurant</h2>
+          <p class="sub">Export saves your menu and settings as <code>restaurant.json</code>. Import loads one into the editor so you can check it before saving. The analysis scripts in the project folder read the same file.</p>
+          <div class="row2"><button type="button" class="ghost" id="export">Export restaurant.json</button><label class="ghost" style="text-align:center;cursor:pointer">Import a file<input type="file" id="import" accept="application/json,.json" hidden></label><button type="button" class="ghost" id="reset-default">Start from the sample menu</button></div>
+          <p class="msg" id="io-state" role="status"></p>
+        </div>
+      </div>
+
+      <div class="opane" data-pane="qr" hidden>
+        <p class="sub">One card per table. Each code opens <span id="qr-link"></span> with the table set, so orders arrive with the right table number. If you copied this menu, put your own link in Settings first.</p>
+        <div class="cards" id="cards"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span id="tax-note"></span>
+    <a href="#menu">Menu</a><a href="#owner">Owner console</a>
+  </footer>
+</div>
+
+<div class="tray" id="tray" hidden>
+  <div class="tray-in">
+    <div class="sheet" id="sheet" hidden>
+      <h2>Your order</h2>
+      <div id="lines"></div>
+      <label for="notes" class="sub">Notes for the kitchen</label>
+      <textarea id="notes" placeholder="Burger medium-rare, no onions on the wings…"></textarea>
+      <div class="tips" role="group" aria-label="Tip" id="tips"></div>
+      <div class="sum" id="sum"></div>
+      <p class="msg" id="order-msg" role="status"></p>
+      <p class="banner" id="offline" hidden>Phone ordering needs a signed-in Claude account. Show this screen to your server and they will ring it in.</p>
+    </div>
+    <div class="tab" id="tab" hidden>
+      <b>Your table so far</b>
+      <div id="tab-rounds"></div>
+      <div class="sum" id="tab-sum"></div>
+      <div class="row2"><button type="button" class="ghost" id="help">Call a server</button><button type="button" class="ghost" id="bill">Ask for the bill</button></div>
+      <label class="sub" style="display:flex;gap:0.5rem;align-items:center">Split evenly between <input type="number" id="split" min="1" max="20" value="1" style="width:4rem"> <span id="split-out"></span></label>
+      <p class="msg" id="bill-msg" role="status"></p>
+    </div>
+    <div class="done" id="done" hidden>
+      <span class="big">Order sent</span>
+      <span id="done-text" class="sub"></span>
+      <button type="button" class="ghost" id="new-order">Keep browsing</button>
+    </div>
+    <button type="button" class="tray-bar" id="tray-bar"><span class="n" id="tray-n">0</span><span id="tray-label">View order</span><span class="t" id="tray-t">$0.00</span></button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden><span id="toast-text"></span><button type="button" id="toast-add">Add</button></div>
+
+<script>
+(() => {
+  const DEFAULT_LINK = "";   // leave empty: each copy saves its own published link in Settings, and the QR codes use that
+  const CODES = { hot: "Hot", veg: "V", gf: "GF", nuts: "N", dairy: "D", "21+": "21+" };
+  const TAGS = { hot: "Spicy", veg: "Vegetarian", gf: "Gluten-free", nuts: "Contains nuts", dairy: "Contains dairy", popular: "Most ordered", chef: "Chef's pick", "21+": "21+" };
+  // The sample restaurant. Owners replace all of this from the console; it is stored in config/restaurant.
+  const SAMPLE = {
+    version: 1, menuLink: DEFAULT_LINK, name: "Maple & Oak", tagline: "American grill", hours: "Open 11 to 10, Fri & Sat till 11",
+    tables: 22, seats: 84, taxRate: 8.25, tipOptions: [0, 18, 20, 22], defaultTip: 18, currency: "$", accent: "#b3261e",
+    timerWarn: 12, timerLate: 20, notice: "Ask your server about allergens. 21+ for beer and wine; your server checks ID.",
+    sections: [
+      { name: "Starters", blurb: "To share, or not.", items: [
+        ["wings", "Buffalo Wings", 13.5, "Ten crispy wings, house buffalo or honey-BBQ, blue cheese, celery.", ["hot", "dairy"], "fries"],
+        ["skins", "Loaded Potato Skins", 11, "Cheddar, bacon, scallions, sour cream.", ["dairy"]],
+        ["pickles", "Fried Pickles", 9, "Cornmeal-battered dill spears, ranch.", ["veg"]],
+        ["dip", "Spinach Artichoke Dip", 12, "Baked with parmesan, tortilla chips.", ["veg", "dairy"]],
+        ["shrimp", "Shrimp Cocktail", 15, "Six chilled jumbo shrimp, horseradish cocktail sauce.", ["gf"]],
+        ["crab", "Crab Cakes", 17.5, "Two lump crab cakes, Old Bay remoulade."] ] },
+      { name: "Burgers & Sandwiches", blurb: "Half-pound patties on toasted brioche, with fries.", items: [
+        ["smash", "Classic Smash Burger", 15, "Two smashed patties, American cheese, pickles, house sauce.", ["popular", "dairy"], "rings"],
+        ["bacon", "Bacon Cheddar Burger", 17, "Thick-cut bacon, sharp cheddar, lettuce, tomato.", ["dairy"], "rings"],
+        ["mush", "Mushroom Swiss Burger", 16.5, "Sautéed mushrooms, Swiss, garlic aioli.", ["dairy"]],
+        ["veggie", "Veggie Burger", 14.5, "Black bean and quinoa patty, pepper jack, avocado.", ["veg", "dairy"]],
+        ["nash", "Nashville Hot Chicken", 15.5, "Fried thigh, cayenne glaze, slaw, pickles.", ["hot"], "shake"],
+        ["dip_s", "French Dip", 16, "Shaved roast beef, Swiss, hoagie roll, au jus.", ["dairy"]],
+        ["pork", "Pulled Pork Sandwich", 14.5, "12-hour smoked shoulder, Carolina sauce, slaw."],
+        ["blt", "Turkey BLT", 12, "Roast turkey, bacon, lettuce, tomato, toasted sourdough."] ] },
+      { name: "From the Grill", blurb: "Steaks with a baked potato and seasonal vegetables.", items: [
+        ["ribeye", "12 oz Ribeye", 34, "USDA Choice, char-grilled, herb butter.", ["gf", "chef", "dairy"], "wine"],
+        ["strip", "NY Strip", 29, "10 oz, peppercorn crust.", ["gf"], "wine"],
+        ["ribs", "Baby Back Ribs, full rack", 27, "Slow-smoked, hickory BBQ glaze, fries and slaw.", [], "beer"],
+        ["halfrib", "Baby Back Ribs, half rack", 19, "Same ribs, lighter appetite."],
+        ["salmon", "Grilled Salmon", 24, "Lemon-dill butter, rice pilaf, green beans.", ["gf", "dairy"]] ] },
+      { name: "Comfort Plates", blurb: "Like Sunday at home.", items: [
+        ["cfs", "Chicken Fried Steak", 18, "Peppered cream gravy, mashed potatoes, green beans.", ["dairy"]],
+        ["meatloaf", "Mom's Meatloaf", 16.5, "Tomato glaze, mashed potatoes, gravy.", ["dairy"]],
+        ["potpie", "Chicken Pot Pie", 16, "Flaky crust, roast chicken, peas and carrots.", ["dairy"]],
+        ["mac", "Baked Mac & Cheese", 14.5, "Three cheeses, toasted breadcrumb top.", ["veg", "dairy"]],
+        ["fish", "Fish & Chips", 17, "Beer-battered cod, fries, tartar sauce.", [], "beer"] ] },
+      { name: "Salads", blurb: "Add grilled chicken $5, salmon $8.", items: [
+        ["cobb", "Cobb Salad", 15.5, "Chicken, bacon, egg, avocado, blue cheese, tomato.", ["gf", "dairy"]],
+        ["caesar", "Chicken Caesar Salad", 13.5, "Romaine, parmesan, garlic croutons.", ["dairy"]],
+        ["harvest", "Harvest Salad", 14, "Mixed greens, roasted squash, pecans, cranberries, goat cheese.", ["veg", "gf", "nuts", "dairy"]] ] },
+      { name: "Sides", blurb: "", items: [
+        ["fries", "Fries", 5, "", ["veg"]], ["swfries", "Sweet Potato Fries", 6, "", ["veg"]], ["rings", "Onion Rings", 6.5, "", ["veg"]],
+        ["macside", "Mac & Cheese", 6, "", ["veg", "dairy"]], ["slaw", "Coleslaw", 4, "", ["veg", "gf"]], ["sidesal", "Side Salad", 5, "", ["veg", "gf"]] ] },
+      { name: "Desserts", blurb: "", items: [
+        ["pie", "Apple Pie à la Mode", 8, "Warm, with vanilla bean ice cream.", ["veg", "dairy"]],
+        ["brownie", "Brownie Sundae", 8.5, "Hot fudge, whipped cream, a cherry.", ["veg", "dairy", "nuts"]],
+        ["cheese", "New York Cheesecake", 9, "Graham crust, strawberry compote.", ["veg", "dairy"]],
+        ["keylime", "Key Lime Pie", 8, "Tart and cold.", ["veg", "dairy"]] ] },
+      { name: "Drinks", blurb: "Soft drinks, tea and coffee come with free refills.", items: [
+        ["soda", "Soft Drink", 3.25, "Coke, Diet Coke, Sprite, root beer.", ["veg", "gf"]], ["tea", "Iced Tea", 3, "Sweet or unsweet.", ["veg", "gf"]],
+        ["lemon", "Lemonade", 3.5, "", ["veg", "gf"]], ["coffee", "Coffee", 3, "Bottomless drip.", ["veg", "gf"]],
+        ["shake", "Milkshake", 7, "Vanilla, chocolate or strawberry.", ["veg", "dairy"]], ["beer", "Draft Beer", 6.5, "Ask about today's taps.", ["21+"]],
+        ["wine", "House Wine", 9, "Red or white, by the glass.", ["21+", "gf"]] ] },
+    ],
+  };
+  SAMPLE.sections.forEach(s => { s.items = s.items.map(([id, name, price, desc, tags, suggest]) => ({ id, name, price, desc: desc || "", tags: tags || [], suggest: suggest || "", soldOut: false, hidden: false })); });
+
+  // ---------------------------------------------------------------- helpers
+  const $ = id => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+  const btn = (cls, text, onclick) => { const b = el("button", cls, text); b.type = "button"; if (onclick) b.onclick = onclick; return b; };
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x";
+  const num = (v, d) => { const n = Number(v); return isFinite(n) ? n : d; };
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const minutes = (a, b) => (new Date(b) - new Date(a)) / 60000;
+  const todayStart = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.toISOString(); };
+  function hexLum(h) { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(x => x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  const contrastWhite = h => 1.05 / (hexLum(h) + 0.05);
+
+  // Clean any setup (saved, imported or sample) into a safe, complete shape.
+  function normalize(raw) {
+    const c = raw && typeof raw === "object" ? raw : {};
+    const out = { version: 1, menuLink: /^https:\/\/[^\s"<>]+$/.test(c.menuLink || "") ? String(c.menuLink).split("#")[0].slice(0, 300) : DEFAULT_LINK,
+      name: String(c.name || SAMPLE.name).slice(0, 60), tagline: String(c.tagline ?? "").slice(0, 120), hours: String(c.hours ?? "").slice(0, 80),
+      tables: clamp(Math.round(num(c.tables, 22)), 1, 200), seats: clamp(Math.round(num(c.seats, 84)), 1, 2000),
+      taxRate: clamp(num(c.taxRate, 0), 0, 30), currency: String(c.currency || "$").slice(0, 4),
+      tipOptions: (Array.isArray(c.tipOptions) ? c.tipOptions : [0, 18, 20, 22]).map(x => clamp(num(x, 0), 0, 50)).slice(0, 6),
+      defaultTip: clamp(num(c.defaultTip, 18), 0, 50), accent: /^#[0-9a-f]{6}$/i.test(c.accent || "") ? c.accent : "#b3261e",
+      timerWarn: clamp(num(c.timerWarn, 12), 1, 120), timerLate: clamp(num(c.timerLate, 20), 1, 180), notice: String(c.notice ?? "").slice(0, 300), sections: [] };
+    if (out.timerLate <= out.timerWarn) out.timerLate = out.timerWarn + 1;
+    const seen = new Set();
+    (Array.isArray(c.sections) ? c.sections : []).slice(0, 30).forEach(s => {
+      const sec = { name: String(s && s.name || "Section").slice(0, 60), blurb: String(s && s.blurb || "").slice(0, 200), items: [] };
+      (Array.isArray(s && s.items) ? s.items : []).slice(0, 80).forEach(it => {
+        if (!it || !it.name) return;
+        let id = slug(it.id || it.name).slice(0, 40); while (seen.has(id)) id += "-2"; seen.add(id);
+        sec.items.push({ id, name: String(it.name).slice(0, 80), price: Math.round(clamp(num(it.price, 0), 0, 10000) * 100) / 100, desc: String(it.desc || "").slice(0, 240),
+          tags: (Array.isArray(it.tags) ? it.tags : []).filter(t => t in TAGS), suggest: String(it.suggest || "").slice(0, 40), soldOut: !!it.soldOut, hidden: !!it.hidden });
+      });
+      out.sections.push(sec);
+    });
+    if (!out.sections.length) out.sections = clone(SAMPLE.sections);
+    return out;
+  }
+
+  // ---------------------------------------------------------------- state
+  let config = normalize(SAMPLE), ITEM = {};
+  let cart = {}, table = null, tip = config.defaultTip / 100, db = null, user = null, uid = null, isEditor = false, sending = false, open = false, fromQr = false;
+  const filters = new Set();
+  let myTab = null, myStatus = {}, unsubTab = null;
+  try { const saved = JSON.parse(localStorage.getItem("mo-cart") || "{}"); for (const k in saved) if (saved[k] > 0) cart[k] = saved[k]; } catch (e) {}
+  const save = () => { try { localStorage.setItem("mo-cart", JSON.stringify(cart)); } catch (e) {} };
+  const money = v => config.currency + (Number(v) || 0).toFixed(2);
+
+  function applyConfig(c) {
+    config = c; ITEM = {};
+    config.sections.forEach(s => s.items.forEach(it => { ITEM[it.id] = it; }));
+    for (const k in cart) if (!ITEM[k] || ITEM[k].soldOut || ITEM[k].hidden) delete cart[k];
+    document.title = config.name + " Menu";
+    $("brand").textContent = config.name;
+    $("tagline").textContent = [config.tagline, config.hours, "scan, order, ask for the bill at your table"].filter(Boolean).join(" · ");
+    $("notice").textContent = config.notice;
+    $("tax-note").textContent = `Prices in ${config.currency}, before ${config.taxRate}% sales tax.`;
+    const r = document.documentElement, dark = r.dataset.theme === "dark" || (r.dataset.theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+    if (!dark && contrastWhite(config.accent) >= 4.5) r.style.setProperty("--ketchup", config.accent); else r.style.removeProperty("--ketchup");   // dark mode keeps its own lighter red
+    if (!config.tipOptions.includes(Math.round(tip * 100))) tip = config.defaultTip / 100;
+    drawTableSelect(); drawTips(); drawMenu(); renderTray();
+    if (isEditor) { drawSoldOut(); if (!editDirty) loadEditor(); if (!setDirty) loadSettings(); drawCards(); drawOwner(); }
+  }
+
+  // ---------------------------------------------------------------- guest: table, filters, menu
+  function drawTableSelect() {
+    const sel = $("table-select"), cur = sel.value; sel.replaceChildren(new Option("Pick one", ""));
+    for (let t = 1; t <= config.tables; t++) sel.append(new Option(String(t), String(t)));
+    if (table > config.tables) table = null;
+    sel.value = table ? String(table) : cur && +cur <= config.tables ? cur : "";
+    $("table-chip").hidden = !table; $("table-num").textContent = table || ""; $("table-pick").hidden = !!table && fromQr;
+  }
+  $("table-select").addEventListener("change", e => { table = e.target.value ? +e.target.value : null; drawTableSelect(); renderTray(); });
+  document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => {
+    const f = b.dataset.filter; filters.has(f) ? filters.delete(f) : filters.add(f); b.setAttribute("aria-pressed", String(filters.has(f))); drawMenu();
+  }));
+  const passes = it => !it.hidden && (!filters.has("veg") || it.tags.includes("veg")) && (!filters.has("gf") || it.tags.includes("gf")) && (!filters.has("nohot") || !it.tags.includes("hot"));
+  let io = null;
+  function drawMenu() {
+    const rail = $("rail"), menu = $("menu"); rail.replaceChildren(); menu.replaceChildren();
+    if (io) io.disconnect();
+    io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) rail.querySelectorAll("a").forEach(a => a.classList.toggle("on", a.dataset.cat === e.target.dataset.cat)); }), { root: document, rootMargin: "-45% 0px -50% 0px" });
+    config.sections.forEach((c, i) => {
+      const items = c.items.filter(passes); if (!items.length) return;
+      const key = "s" + i + "-" + slug(c.name);
+      const a = el("a", "", c.name); a.href = "#menu"; a.dataset.cat = key;
+      a.addEventListener("click", ev => { ev.preventDefault(); document.querySelector(`section.cat[data-cat="${key}"]`).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); });
+      rail.append(a);
+      const s = el("section", "cat"); s.dataset.cat = key;
+      s.append(el("h2", "", c.name)); if (c.blurb) s.append(el("p", "", c.blurb));
+      items.forEach(it => {
+        const row = el("div", "item" + (it.soldOut ? " out" : ""));
+        const h = el("h3", "ihead"); const nm = el("span", "iname", it.name);
+        it.tags.filter(t => CODES[t]).forEach(t => { const c = el("abbr", "code" + (t === "hot" ? " hot" : ""), CODES[t]); c.title = TAGS[t]; c.setAttribute("aria-label", TAGS[t]); nm.append(" ", c); });
+        h.append(nm, el("span", "lead"), el("span", "price", money(it.price)));
+        const flags = it.tags.filter(t => t === "popular" || t === "chef");
+        if (flags.length) { const f = el("span", "flag", flags.map(t => TAGS[t]).join(" · ")); row.append(f); }
+        row.append(h);
+        if (it.desc) row.append(el("p", "", it.desc));
+        const q = el("div", "qty"); q.dataset.id = it.id; row.append(q); s.append(row);
+      });
+      menu.append(s); io.observe(s);
+    });
+    if (!menu.childElementCount) menu.append(el("p", "empty", "Nothing matches those filters. Clear one to see more."));
+    drawQty();
+  }
+  function drawQty() {
+    document.querySelectorAll(".qty[data-id]").forEach(q => {
+      const it = ITEM[q.dataset.id]; if (!it) return; const n = cart[it.id] || 0; q.replaceChildren();
+      if (it.soldOut) { const b = btn("add", "Sold out"); b.disabled = true; q.append(b); return; }
+      if (!n) { const b = btn("add", "Add", () => change(it.id, 1, true)); b.setAttribute("aria-label", "Add " + it.name); q.append(b); return; }
+      const m = btn("step", "−", () => change(it.id, -1)); m.setAttribute("aria-label", "One less " + it.name);
+      const p = btn("step", "+", () => change(it.id, 1)); p.setAttribute("aria-label", "One more " + it.name);
+      q.append(m, el("output", "", String(n)), p);
+    });
+  }
+  let toastTimer = null;
+  function change(id, d, fresh) {
+    if (!ITEM[id] || ITEM[id].soldOut) return;
+    cart[id] = Math.max(0, (cart[id] || 0) + d); if (!cart[id]) delete cart[id]; save(); drawQty(); renderTray();
+    const sug = fresh && ITEM[ITEM[id].suggest];
+    if (sug && !sug.soldOut && !sug.hidden && !cart[sug.id]) {
+      $("toast-text").textContent = `Goes well with ${sug.name}, ${money(sug.price)}`;
+      $("toast-add").onclick = () => { change(sug.id, 1); $("toast").hidden = true; };
+      $("toast").hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $("toast").hidden = true; }, 6000);
+    }
+  }
+
+  // ---------------------------------------------------------------- guest: tray, tab, ordering
+  function drawTips() {
+    const box = $("tips"); box.replaceChildren(el("span", "sub", "Tip"));
+    config.tipOptions.forEach(p => { const b = btn("pill", p ? p + "%" : "None", () => { tip = p / 100; drawTips(); renderTray(); }); b.setAttribute("aria-pressed", String(Math.round(tip * 100) === p)); box.append(b); });
+  }
+  const totals = () => { const sub = Object.entries(cart).reduce((s, [id, n]) => s + (ITEM[id] ? ITEM[id].price * n : 0), 0); const tax = sub * config.taxRate / 100, tp = sub * tip; return { sub, tax, tp, total: sub + tax + tp, count: Object.values(cart).reduce((a, b) => a + b, 0) }; };
+  const hasTab = () => !!(myTab && Array.isArray(myTab.rounds) && myTab.rounds.length);
+  function renderTray() {
+    const t = totals(), guestView = !$("view-menu").hidden;
+    $("tray").hidden = !guestView || (!t.count && $("done").hidden && !hasTab());
+    $("tray-n").textContent = t.count; $("tray-t").textContent = money(t.total);
+    $("tray-label").textContent = !t.count ? (open ? "Close" : "Your table") : !open ? "View order" : !table ? "Pick your table to order" : sending ? "Sending…" : "Send order to the kitchen";
+    $("tray-t").hidden = !t.count;
+    $("tray-bar").hidden = !$("done").hidden;
+    $("sheet").hidden = !open || !$("done").hidden || !t.count;
+    const lines = $("lines"); lines.replaceChildren();
+    Object.entries(cart).forEach(([id, n]) => { const it = ITEM[id]; if (!it) return;
+      const r = el("div", "line"); r.append(el("span", "", it.name));
+      const q = el("div", "qty"); q.style.gridColumn = "auto"; q.style.gridRow = "auto";
+      const m = btn("step", "−", () => change(id, -1)); m.setAttribute("aria-label", "One less " + it.name);
+      const p = btn("step", "+", () => change(id, 1)); p.setAttribute("aria-label", "One more " + it.name);
+      q.append(m, el("output", "", String(n)), p); r.append(q, el("span", "lp", money(it.price * n))); lines.append(r); });
+    const sum = $("sum"); sum.replaceChildren();
+    [["Subtotal", t.sub], [`Sales tax ${config.taxRate}%`, t.tax], [`Tip ${Math.round(tip * 100)}%`, t.tp]].forEach(([k, v]) => sum.append(el("span", "", k), el("span", "", money(v))));
+    sum.append(el("span", "tot", "Total"), el("span", "tot", money(t.total)));
+    drawTab();
+  }
+  function drawTab() {
+    const box = $("tab"); box.hidden = !hasTab() || !open && !!totals().count; if (box.hidden) return;
+    const rs = $("tab-rounds"); rs.replaceChildren(); let total = 0;
+    myTab.rounds.forEach((r, i) => { const st = String(myStatus["r" + r.id] || "new"); total += Number(r.total) || 0;
+      const row = el("div", "rd"); row.append(el("span", "", `Round ${i + 1}: ` + (r.lines || []).map(l => `${Number(l.qty) || 1} × ${String(l.name || "")}`).join(", ")));
+      row.append(el("span", "st " + (["new", "cooking", "served"].includes(st) ? st : "new"), st === "new" ? "received" : st)); rs.append(row); });
+    $("tab-sum").replaceChildren(el("span", "tot", "Table total"), el("span", "tot", money(total)));
+    const n = clamp(Math.round(num($("split").value, 1)), 1, 20); $("split-out").textContent = n > 1 ? `${money(total / n)} each` : "";
+    const b = $("bill"); b.disabled = !!myTab.billRequested; b.textContent = myTab.billRequested ? "Bill requested" : "Ask for the bill";
+    const h = $("help"); h.disabled = !!myTab.needsHelp; h.textContent = myTab.needsHelp ? "Server called" : "Call a server";
+    $("bill-msg").textContent = myTab.billRequested ? "Your server is on the way with the card reader." : myTab.needsHelp ? "A server is on the way." : "";
+  }
+  $("split").addEventListener("input", drawTab);
+  function watchTab() {
+    if (!db || !uid || unsubTab) return;
+    unsubTab = db.doc("orders/" + uid).onSnapshot(s => { myTab = s.exists ? s.data() : null; renderTray(); }, () => {});
+    db.doc("status/" + uid).onSnapshot(s => { myStatus = (s.exists && s.data()) || {}; renderTray(); }, () => {});
+  }
+  async function flagTab(field) { if (!db || !uid || !hasTab()) return; try { await db.doc("orders/" + uid).update({ [field]: true, [field + "At"]: new Date().toISOString() }); } catch (e) { $("bill-msg").textContent = "That didn't reach the staff. Wave someone over, or try again."; } }
+  $("bill").addEventListener("click", () => flagTab("billRequested"));
+  $("help").addEventListener("click", () => flagTab("needsHelp"));
+  $("tray-bar").addEventListener("click", () => {
+    if (!open) { open = true; renderTray(); return; }
+    if (!totals().count) { open = false; renderTray(); return; }
+    if (!table) { const m = $("order-msg"); m.textContent = "Choose your table number at the top of the menu first."; m.className = "msg err"; $("table-select").focus(); return; }
+    send();
+  });
+  $("new-order").addEventListener("click", () => { $("done").hidden = true; open = false; renderTray(); });
+  async function send() {
+    if (sending || !totals().count) return;
+    const msg = $("order-msg");
+    if (!db || !uid) { $("offline").hidden = false; return; }
+    sending = true; renderTray(); msg.textContent = "";
+    const t = totals();
+    const round = { id: Date.now().toString(36), table, lines: Object.entries(cart).map(([id, n]) => ({ id, name: ITEM[id].name, qty: n, price: ITEM[id].price })),
+      notes: $("notes").value.trim().slice(0, 500), subtotal: +t.sub.toFixed(2), tax: +t.tax.toFixed(2), tip: +t.tp.toFixed(2), total: +t.total.toFixed(2), placedAt: new Date().toISOString() };
+    try {
+      const prev = hasTab() ? myTab.rounds : [];
+      await db.doc("orders/" + uid).set({ guest: uid, table, rounds: [...prev, round].slice(-20), billRequested: false, needsHelp: !!(myTab && myTab.needsHelp), updatedAt: round.placedAt });
+      cart = {}; save(); $("notes").value = ""; open = false; drawQty();
+      $("done-text").textContent = `Table ${table} · ${money(t.total)} · the kitchen has it. Watch its progress below, and ask for the bill when you're done.`;
+      $("done").hidden = false;
+    } catch (e) {
+      msg.className = "msg err";
+      msg.textContent = e && e.code === "not_granted" ? "Your access to this menu doesn't allow ordering. Show this screen to your server." : "The order didn't go through. Check your connection and tap Send again.";
+    } finally { sending = false; renderTray(); }
+  }
+
+  // ---------------------------------------------------------------- owner: data
+  let tabs = [], stats = {}, history = [], lastBumped = [], ownerStarted = false;
+  const NEXT = { new: "cooking", cooking: "served", served: "served" };
+  function startOwner() {
+    if (ownerStarted || !db) return; ownerStarted = true;
+    db.collection("orders").onSnapshot(s => { tabs = s.docs.map(d => ({ id: d.id, data: d.data() || {} })); drawOwner(); }, () => {});
+    db.collection("status").onSnapshot(s => { stats = {}; s.docs.forEach(d => { stats[d.id] = d.data() || {}; }); drawOwner(); }, () => {});
+    db.collection("history").where("closedAt", ">=", todayStart()).onSnapshot(s => { history = s.docs.map(d => d.data() || {}); drawOwner(); }, () => {});
+    setInterval(() => { if (!$("view-owner").hidden) drawLive(); }, 30000);
+  }
+  const openRounds = () => { const out = []; tabs.forEach(t => (Array.isArray(t.data.rounds) ? t.data.rounds : []).forEach(r => out.push({ t, r, st: String((stats[t.id] || {})["r" + r.id] || "new") }))); return out; };
+  function drawOwner() { if (!isEditor) return; drawToday(); drawLive(); }
+  function alertRows(box) {
+    box.replaceChildren();
+    tabs.filter(t => t.data.needsHelp || t.data.billRequested).forEach(t => {
+      const tot = (t.data.rounds || []).reduce((s, r) => s + (Number(r.total) || 0), 0);
+      if (t.data.needsHelp) { const a = el("div", "alert help"); a.append(el("span", "", `Table ${Number(t.data.table) || "?"} is asking for a server`));
+        a.append(btn("ghost", "Done", () => db.doc("orders/" + t.id).update({ needsHelp: false }).catch(() => {}))); box.append(a); }
+      if (t.data.billRequested) { const a = el("div", "alert bill"); a.append(el("span", "", `Table ${Number(t.data.table) || "?"} wants the bill · ${money(tot)}`));
+        const b = btn("solid", "Paid, close table", async () => { b.disabled = true;
+          try { await db.collection("history").add({ ...t.data, statuses: stats[t.id] || {}, closedAt: new Date().toISOString(), paidWith: "card reader" });
+                await db.doc("orders/" + t.id).delete(); await db.doc("status/" + t.id).delete().catch(() => {}); }
+          catch (e) { b.disabled = false; b.textContent = "Couldn't close, try again"; } });
+        a.append(b); box.append(a); }
+    });
+  }
+  function drawToday() {
+    alertRows($("alerts"));
+    const since = todayStart();
+    const rounds = [...openRounds().map(x => ({ r: x.r, served: (stats[x.t.id] || {})["r" + x.r.id + "@served"] })),
+                    ...history.flatMap(h => (h.rounds || []).map(r => ({ r, served: (h.statuses || {})["r" + r.id + "@served"] })))].filter(x => String(x.r.placedAt) >= since);
+    const sales = rounds.reduce((s, x) => s + (Number(x.r.subtotal) || 0), 0);
+    $("s-sales").textContent = money(sales); $("s-rounds").textContent = String(rounds.length);
+    $("s-rounds-d").textContent = `today, ${history.length} table${history.length === 1 ? "" : "s"} closed`;
+    const checks = history.map(h => (h.rounds || []).reduce((s, r) => s + (Number(r.subtotal) || 0), 0));
+    $("s-check").textContent = checks.length ? money(checks.reduce((a, b) => a + b, 0) / checks.length) : "—";
+    const times = rounds.filter(x => x.served).map(x => minutes(x.r.placedAt, x.served)).filter(m => m >= 0).sort((a, b) => a - b);
+    $("s-ticket").textContent = times.length ? Math.round(times[Math.floor(times.length / 2)]) + " min" : "—";
+    const openTables = new Set(tabs.map(t => Number(t.data.table)).filter(Boolean));
+    $("s-open").textContent = String(openTables.size); $("s-open-d").textContent = `of ${config.tables}`;
+    const floor = $("floor"); floor.replaceChildren();
+    for (let n = 1; n <= config.tables; n++) {
+      const ts = tabs.filter(t => Number(t.data.table) === n);
+      let state = "free", label = "Free";
+      if (ts.length) {
+        const rs = ts.flatMap(t => (t.data.rounds || []).map(r => (stats[t.id] || {})["r" + r.id] || "new"));
+        state = rs.some(s => s !== "served") ? "cooking" : "eating"; label = state === "cooking" ? "Food on the way" : "Eating";
+        if (ts.some(t => t.data.billRequested)) { state = "bill"; label = "Wants bill"; }
+        if (ts.some(t => t.data.needsHelp)) { state = "help"; label = "Needs a server"; }
+      }
+      const tile = el("div", "tbl " + state); tile.append(el("b", "", String(n)), el("span", "", label)); floor.append(tile);
+    }
+    const counts = {}; rounds.forEach(x => (x.r.lines || []).forEach(l => { const k = String(l.name || l.id); counts[k] = (counts[k] || 0) + (Number(l.qty) || 1); }));
+    const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    $("top-items").replaceChildren(...top.map(([k, v]) => { const li = el("li"); li.append(el("span", "", k), el("span", "", String(v))); return li; }));
+    $("top-empty").hidden = !!top.length;
+  }
+  function drawLive() {
+    if (!isEditor) return;
+    alertRows($("alerts-live"));
+    const lg = $("timer-legend"); lg.replaceChildren();
+    [["var(--ok)", `Under ${config.timerWarn} min`], ["var(--mustard)", `${config.timerWarn}–${config.timerLate} min`], ["var(--bad)", `Over ${config.timerLate} min`]].forEach(([c, t]) => { const s = el("span"); const i = el("i"); i.style.background = c; s.append(i, t); lg.append(s); });
+    const box = $("tickets"); box.replaceChildren();
+    const live = openRounds().filter(x => x.st !== "served").sort((a, b) => String(a.r.placedAt).localeCompare(String(b.r.placedAt)));
+    const c = $("live-count"); c.hidden = !live.length; c.textContent = String(live.length);
+    if (!live.length) box.append(el("p", "empty", "No tickets waiting. New orders appear here the moment a guest sends them."));
+    live.forEach(({ t, r, st }) => {
+      const age = Math.max(0, Math.floor(minutes(r.placedAt, new Date())));
+      const tk = el("div", "ticket" + (age >= config.timerLate ? " late" : age >= config.timerWarn ? " warn" : ""));
+      const hd = el("div", "hd"); hd.append(el("span", "tno", "Table " + (Number(t.data.table) || "?")), el("span", "age", age + " min")); tk.append(hd);
+      tk.append(el("span", "st " + st, st === "new" ? "new" : "cooking"));
+      const ul = el("ul"); (Array.isArray(r.lines) ? r.lines : []).forEach(l => { const li = el("li"); li.append(el("span", "q", (Number(l.qty) || 1) + "×"), String(l.name || "")); ul.append(li); }); tk.append(ul);
+      if (r.notes) tk.append(el("span", "note", "Note: " + String(r.notes)));
+      const b = btn("solid bump", st === "new" ? "Start cooking" : "Served", async () => {
+        b.disabled = true; const next = NEXT[st]; const patch = { ...(stats[t.id] || {}), ["r" + r.id]: next };
+        if (next === "served") { patch["r" + r.id + "@served"] = new Date().toISOString(); lastBumped.push({ tid: t.id, rid: r.id }); lastBumped = lastBumped.slice(-10); $("recall").disabled = false; }
+        try { await db.doc("status/" + t.id).set(patch); } catch (e) { b.disabled = false; b.textContent = "Couldn't update"; }
+      });
+      tk.append(b); box.append(tk);
+    });
+  }
+  $("recall").addEventListener("click", async () => {
+    const last = lastBumped.pop(); $("recall").disabled = !lastBumped.length; if (!last) return;
+    const patch = { ...(stats[last.tid] || {}), ["r" + last.rid]: "cooking" }; delete patch["r" + last.rid + "@served"];
+    try { await db.doc("status/" + last.tid).set(patch); } catch (e) {}
+  });
+
+  // ---------------------------------------------------------------- owner: saving the setup
+  async function saveConfig(next, stateEl) {
+    if (!db) { stateEl.textContent = "Saving needs a signed-in editor."; return false; }
+    try { await db.doc("config/restaurant").set(normalize(next)); stateEl.textContent = "Saved. Guests see it now."; return true; }
+    catch (e) { stateEl.textContent = e && e.code === "not_granted" ? "Only editors can change the menu." : "Couldn't save. Check your connection and try again."; return false; }
+  }
+  function drawSoldOut() {
+    const box = $("soldout"); box.replaceChildren();
+    config.sections.forEach(s => {
+      const items = s.items.filter(it => !it.hidden); if (!items.length) return;
+      const grp = el("div", "sogrp"); grp.append(el("span", "sohd", s.name)); const row = el("div", "sorow");
+      items.forEach(it => { const b = btn("pill so", it.name, () => { b.disabled = true; const next = clone(config); next.sections.forEach(x => x.items.forEach(y => { if (y.id === it.id) y.soldOut = !it.soldOut; })); saveConfig(next, { set textContent(v) {} }).then(() => { b.disabled = false; }); });
+        b.setAttribute("aria-pressed", String(it.soldOut)); b.title = it.soldOut ? "Sold out. Tap when it's back." : "Tap to mark sold out"; row.append(b); });
+      grp.append(row); box.append(grp);
+    });
+  }
+
+  // ---------------------------------------------------------------- owner: menu editor
+  let draft = null, editDirty = false;
+  const markDirty = () => { editDirty = true; $("edit-state").textContent = "Unsaved changes."; };
+  function loadEditor() { draft = clone(config); editDirty = false; drawEditor(); }
+  function drawEditor() {
+    const box = $("editor"); box.replaceChildren();
+    const allItems = draft.sections.flatMap(s => s.items);
+    draft.sections.forEach((s, si) => {
+      const sec = el("div", "ed-sec"); const hd = el("div", "ed-sec-hd");
+      const nm = el("input"); nm.type = "text"; nm.value = s.name; nm.setAttribute("aria-label", "Section name"); nm.oninput = () => { s.name = nm.value; markDirty(); };
+      const bl = el("input"); bl.type = "text"; bl.value = s.blurb; bl.placeholder = "Short line under the section name"; bl.setAttribute("aria-label", "Section note"); bl.oninput = () => { s.blurb = bl.value; markDirty(); };
+      const tools = el("span", "ed-tools");
+      tools.append(btn("icon", "↑", () => { if (si > 0) { [draft.sections[si - 1], draft.sections[si]] = [draft.sections[si], draft.sections[si - 1]]; markDirty(); drawEditor(); } }),
+                   btn("icon", "↓", () => { if (si < draft.sections.length - 1) { [draft.sections[si + 1], draft.sections[si]] = [draft.sections[si], draft.sections[si + 1]]; markDirty(); drawEditor(); } }),
+                   btn("icon", "✕", () => { if (s.items.length && !sec.dataset.confirm) { sec.dataset.confirm = "1"; tools.lastChild.textContent = "?"; tools.lastChild.title = "Tap again to delete this section and its dishes"; return; } draft.sections.splice(si, 1); markDirty(); drawEditor(); }));
+      [...tools.children].forEach((b, i) => b.setAttribute("aria-label", ["Move section up", "Move section down", "Delete section"][i]));
+      hd.append(nm, bl, tools); sec.append(hd);
+      s.items.forEach((it, ii) => {
+        const row = el("div", "ed-item");
+        const n = el("input"); n.type = "text"; n.value = it.name; n.setAttribute("aria-label", "Dish name"); n.oninput = () => { it.name = n.value; markDirty(); };
+        const p = el("input"); p.type = "number"; p.min = "0"; p.step = "0.25"; p.value = it.price; p.setAttribute("aria-label", "Price"); p.oninput = () => { it.price = num(p.value, 0); markDirty(); };
+        const d = el("textarea"); d.value = it.desc; d.rows = 1; d.placeholder = "Description"; d.setAttribute("aria-label", "Description"); d.style.minHeight = "2.2rem"; d.oninput = () => { it.desc = d.value; markDirty(); };
+        const tl = el("span", "ed-tools");
+        tl.append(btn("icon", "↑", () => { if (ii > 0) { [s.items[ii - 1], s.items[ii]] = [s.items[ii], s.items[ii - 1]]; markDirty(); drawEditor(); } }),
+                  btn("icon", "↓", () => { if (ii < s.items.length - 1) { [s.items[ii + 1], s.items[ii]] = [s.items[ii], s.items[ii + 1]]; markDirty(); drawEditor(); } }),
+                  btn("icon", "✕", () => { s.items.splice(ii, 1); markDirty(); drawEditor(); }));
+        [...tl.children].forEach((b, i) => b.setAttribute("aria-label", ["Move dish up", "Move dish down", "Delete dish"][i]));
+        const tags = el("div", "tags");
+        Object.entries(TAGS).forEach(([k, v]) => { const lab = el("label"); const cb = el("input"); cb.type = "checkbox"; cb.checked = it.tags.includes(k);
+          cb.onchange = () => { it.tags = cb.checked ? [...new Set([...it.tags, k])] : it.tags.filter(x => x !== k); markDirty(); }; lab.append(cb, document.createTextNode(v)); tags.append(lab); });
+        const hid = el("label"); const hc = el("input"); hc.type = "checkbox"; hc.checked = it.hidden; hc.onchange = () => { it.hidden = hc.checked; markDirty(); }; hid.append(hc, document.createTextNode("Hidden from guests")); tags.append(hid);
+        const sg = el("label"); sg.append(document.createTextNode("Suggest with it: "));
+        const ss = el("select"); ss.append(new Option("Nothing", "")); allItems.filter(x => x.id !== it.id).forEach(x => ss.append(new Option(x.name, x.id))); ss.value = it.suggest || "";
+        ss.onchange = () => { it.suggest = ss.value; markDirty(); }; sg.append(ss); tags.append(sg);
+        row.append(n, p, d, tl, tags); sec.append(row);
+      });
+      sec.append(btn("ghost", "Add a dish to " + (s.name || "this section"), () => {
+        const name = "New dish"; let id = slug(name) + "-" + Date.now().toString(36).slice(-4);
+        s.items.push({ id, name, price: 0, desc: "", tags: [], suggest: "", soldOut: false, hidden: true }); markDirty(); drawEditor();
+        const inputs = $("editor").querySelectorAll(".ed-sec")[si].querySelectorAll(".ed-item input[type=text]"); inputs[inputs.length - 1].select();
+      }));
+      box.append(sec);
+    });
+  }
+  $("add-section").addEventListener("click", () => { draft.sections.push({ name: "New section", blurb: "", items: [] }); markDirty(); drawEditor(); });
+  $("edit-undo").addEventListener("click", () => { loadEditor(); $("edit-state").textContent = "Changes discarded."; });
+  $("edit-save").addEventListener("click", async () => { const ok = await saveConfig({ ...config, sections: draft.sections }, $("edit-state")); if (ok) editDirty = false; });
+
+  // ---------------------------------------------------------------- owner: settings, export, import
+  let setDirty = false;
+  const S = id => $("set-" + id);
+  function loadSettings() {
+    S("name").value = config.name; S("tagline").value = config.tagline; S("hours").value = config.hours; S("tables").value = config.tables; S("seats").value = config.seats;
+    S("tax").value = config.taxRate; S("tips").value = config.tipOptions.join(", "); S("tipdef").value = config.defaultTip; S("cur").value = config.currency;
+    S("accent").value = config.accent; S("warn").value = config.timerWarn; S("late").value = config.timerLate; S("notice").value = config.notice; S("link").value = config.menuLink;
+    setDirty = false; checkAccent();
+  }
+  function checkAccent() { const c = contrastWhite(S("accent").value); $("accent-check").textContent = c >= 4.5 ? `Readable with white text (${c.toFixed(1)}:1).` : `Too light for white text (${c.toFixed(1)}:1); the menu keeps its default red. Pick a darker shade.`; }
+  document.querySelectorAll('[id^="set-"]').forEach(i => i.addEventListener("input", () => { setDirty = true; $("set-state").textContent = "Unsaved changes."; if (i.id === "set-accent") checkAccent(); }));
+  $("set-save").addEventListener("click", async () => {
+    const link = S("link").value.trim();
+    if (link && !/^https:\/\/[^\s"<>]+$/.test(link)) { $("set-state").textContent = "The menu link must start with https://. Copy it from your browser's address bar."; S("link").focus(); return; }
+    const next = { ...config, name: S("name").value.trim() || config.name, tagline: S("tagline").value, hours: S("hours").value, tables: S("tables").value, seats: S("seats").value,
+      taxRate: S("tax").value, tipOptions: S("tips").value.split(",").map(x => x.trim()).filter(Boolean), defaultTip: S("tipdef").value, currency: S("cur").value.trim() || "$",
+      accent: S("accent").value, timerWarn: S("warn").value, timerLate: S("late").value, notice: S("notice").value, menuLink: S("link").value.trim() };
+    if (await saveConfig(next, $("set-state"))) setDirty = false;
+  });
+  $("export").addEventListener("click", async () => {
+    const msg = $("io-state");
+    try { const dl = await claude.use("downloads"); if (!dl) throw { code: "unavailable" };
+      await dl.save({ filename: slug(config.name) + "-restaurant.json", data: JSON.stringify(config, null, 2) }); msg.textContent = "Saved to your computer."; }
+    catch (e) { msg.textContent = e && e.code === "cancelled" ? "Export cancelled." : "Downloads aren't available here. Ask Claude to export the setup instead."; }
+  });
+  $("import").addEventListener("change", async e => {
+    const f = e.target.files && e.target.files[0]; const msg = $("io-state"); e.target.value = "";
+    if (!f) return;
+    try { const parsed = normalize(JSON.parse(await f.text()));
+      draft = clone(parsed); editDirty = true; drawEditor(); $("edit-state").textContent = "Imported. Check it, then save.";
+      S("name").value = parsed.name; S("tagline").value = parsed.tagline; S("hours").value = parsed.hours; S("tables").value = parsed.tables; S("seats").value = parsed.seats;
+      S("tax").value = parsed.taxRate; S("tips").value = parsed.tipOptions.join(", "); S("tipdef").value = parsed.defaultTip; S("cur").value = parsed.currency; S("accent").value = parsed.accent;
+      S("warn").value = parsed.timerWarn; S("late").value = parsed.timerLate; S("notice").value = parsed.notice; S("link").value = parsed.menuLink; setDirty = true; $("set-state").textContent = "Imported settings. Save to apply."; checkAccent();
+      msg.textContent = `Loaded ${parsed.sections.reduce((s, x) => s + x.items.length, 0)} dishes in ${parsed.sections.length} sections. Save the menu and the settings to publish them.`;
+    } catch (err) { msg.textContent = "That file isn't a restaurant setup. Export one from this console to see the format."; }
+  });
+  $("reset-default").addEventListener("click", () => { draft = normalize(SAMPLE); editDirty = true; drawEditor(); $("edit-state").textContent = "Sample menu loaded. Save to use it."; showPane("edit"); });
+
+  // ---------------------------------------------------------------- owner: QR cards
+  let cardsFor = "";
+  function drawCards() {
+    const key = config.name + "|" + config.tables + "|" + config.menuLink; if (cardsFor === key) return; cardsFor = key;
+    $("qr-link").textContent = config.menuLink || "this menu"; const box = $("cards"); box.replaceChildren();
+    if (!config.menuLink) { box.append(el("p", "banner", "Add this menu's published link in Settings first. The QR codes point to it.")); cardsFor = ""; return; }
+    for (let t = 1; t <= config.tables; t++) {
+      const c = el("div", "card"); c.append(el("span", "nm", config.name)); const q = el("div", "qr"); c.append(q, el("b", "", "Table " + t), el("small", "", "Scan to order")); box.append(c);
+      if (window.QRCode) new QRCode(q, { text: config.menuLink + "#table-" + t, width: 256, height: 256, colorDark: "#1f1a17", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+      else q.append(el("small", "", "QR library didn't load"));
+    }
+  }
+
+  // ---------------------------------------------------------------- views
+  function showPane(p) {
+    document.querySelectorAll(".otab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.pane === p)));
+    document.querySelectorAll(".opane").forEach(x => { x.hidden = x.dataset.pane !== p; });
+    if (p === "qr") drawCards(); if (p === "live") drawLive(); if (p === "today") drawToday();
+  }
+  document.querySelectorAll(".otab").forEach(b => b.addEventListener("click", () => showPane(b.dataset.pane)));
+  function route() {
+    const h = location.hash.slice(1);
+    const m = /^table-(\d{1,3})$/.exec(h);
+    if (m && +m[1] >= 1 && +m[1] <= config.tables) { table = +m[1]; fromQr = true; drawTableSelect(); }
+    const owner = h === "owner" || h === "kitchen" || h === "qr";
+    $("view-menu").hidden = owner; $("view-owner").hidden = !owner; document.body.classList.toggle("owner", owner); $("console-eyebrow").hidden = !owner;
+    $("owner-locked").hidden = !owner || isEditor; $("owner-body").hidden = !owner || !isEditor;
+    if (owner && isEditor) { startOwner(); showPane(h === "kitchen" ? "live" : h === "qr" ? "qr" : document.querySelector('.otab[aria-selected="true"]').dataset.pane); }
+    $("toast").hidden = true; renderTray();
+  }
+  window.addEventListener("hashchange", route);
+  const tick = () => { $("clock").textContent = new Date().toLocaleString([], { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }); };
+  tick(); setInterval(tick, 30000);
+
+  applyConfig(config); route();
+  // re-check the brand colour when the viewer's theme changes (dark mode keeps its own lighter red)
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => applyConfig(config));
+  new MutationObserver(() => applyConfig(config)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  Promise.all([claude.use("db"), claude.use("user")]).then(async ([d, u]) => {
+    db = d; user = u;
+    if (u) { try { uid = await u.id(); } catch (e) { uid = null; } try { isEditor = !!(await u.canEdit()); } catch (e) { isEditor = false; } }
+    if (db) db.doc("config/restaurant").onSnapshot(s => { if (s.exists) applyConfig(normalize(s.data())); }, () => {});
+    if (isEditor) { loadEditor(); loadSettings(); drawSoldOut(); }
+    watchTab(); route();
+  });
+})();
+</script>
